@@ -375,7 +375,7 @@ R.difficulty=()=>{const sets=S.weak?'Weak items':[...S.duelSets].sort().map(n=>'
 ${diffRow('easy',1)}${diffRow('medium',2)}${diffRow('hard',3)}</div><div style="padding:0 26px 44px"><div class="btn wh" data-act="begin">Begin Duel ${icon('TRI','#2a2440',2)}</div></div></div>`};
 function nameSize(en,jp){return Math.max(20,Math.min(36,Math.floor((350-(JL()?jp.length*30:0))/(en.length*0.74))))}
 R.challenge=()=>{const d=S.duel,[c,en,jp,tk,taunt]=d.opp,fs=nameSize(en,jp),df=DIFF[S.diff],tr=DIFF[tk]||df,match=tr===df;
-  return `${bg(SCENE.challenge)}<div class="a-wbg-${c}" style="position:absolute;left:26px;top:142px;width:360px;height:480px;background-size:360px 480px;image-rendering:pixelated;box-shadow:0 0 0 4px var(--ink)"></div>
+  return `${chalBg(d.scene)}<div class="a-wbg-${c}" style="position:absolute;left:26px;top:142px;width:360px;height:480px;background-size:360px 480px;image-rendering:pixelated;box-shadow:0 0 0 4px var(--ink)"></div>
 <div class="tag otier" style="position:absolute;left:38px;top:154px;z-index:2;font-size:13px;gap:7px" aria-label="Opponent tier ${tr.n}"><span class="px" style="font-size:12px">${tr.n.toUpperCase()}</span>${pips(tr.lv)}${jl(tr.jp,'font-size:13px','serif jpl')}</div>
 <div class="layer">${STATUS}<div class="plate" style="text-align:center;margin:20px auto 0;padding:${JL()?'4px 22px':'14px 22px'}">${JL()?ja('挑戦','display:block;font-size:54px;line-height:1.1;color:var(--title);text-shadow:4px 4px 0 var(--titleSh)','brush'):''}<div class="px" style="font-size:${JL()?16:26}px;letter-spacing:${JL()?6:4}px;color:var(--h1);font-weight:700;${JL()?'':'text-shadow:3px 3px 0 var(--h1sh)'}">CHALLENGE</div></div>
 <div style="flex:1"></div><div style="position:relative;min-height:124px;padding:${taunt?'8px 0 12px':'0'};gap:${taunt?4:6}px!important;margin-bottom:6px;background:var(--chrome);box-shadow:inset 0 4px 0 0 var(--edge),0 -4px 0 0 var(--ink),0 4px 0 0 var(--ink),0 12px 0 0 var(--shade);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
@@ -492,6 +492,11 @@ const DUELBG={dojo:null,rain_alley:[22,42],bamboo_dusk:[21,24],tokyo_rooftop:[0,
 const DUELPOOL=Object.keys(DUELBG);
 function duelBg(sc){const p=DUELBG[sc];if(!p)return bg(SCENE.play,'top:0;margin-top:-125px;margin-left:-330px');
   return `<div class="bg a-duel-${sc}" style="top:0;margin-top:-${p[1]*3}px;margin-left:-${206+p[0]*3}px"></div>`}
+// v11: the challenge screen shows the scene already picked for this duel (newDuel runs on 'begin', before the challenge),
+// so Accept changes nothing. Dojo = old behaviour (theme day/night, centred). New scenes: window top-left in art px.
+const CHALBG={rain_alley:[22,8],bamboo_dusk:[21,8],tokyo_rooftop:[10,8],sakura_garden:[21,8]};
+function chalBg(sc){const p=CHALBG[sc];if(!p)return bg(SCENE.challenge);
+  return `<div class="bg a-duel-${sc}" style="left:0;top:0;margin:-${p[1]*3}px 0 0 -${p[0]*3}px"></div>`}
 let raf=0,fbTimer=0;
 function startQ(){const d=S.duel;d.phase='ask';d.t0=performance.now();d.deadline=d.t0+DIFF[S.diff].sec*1000;render();loop()}
 function loop(){cancelAnimationFrame(raf);const d=S.duel;if(!d||S.screen!=='play'||d.phase!=='ask'||d.paused)return;
