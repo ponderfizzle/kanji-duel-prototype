@@ -125,8 +125,9 @@ function freshMastery(seed){const M={};for(const id in ITEMS)M[id]=rec();
   return M}
 /* ---------- state ---------- */
 let themePref='dark'; try{themePref=localStorage.getItem('kd-theme')||'dark'}catch(e){}
+let autoSOPref=false; try{autoSOPref=localStorage.getItem('kd-autoso')==='1'}catch(e){} /* auto-play stroke order: default OFF */
 const S={theme:themePref,screen:'title',stack:[],owned:new Set(FREE_SETS),M:freshMastery(true),studySet:1,duelSets:new Set([1]),diff:'medium',
-  set:{music:true,sfx:false,remind:true,rem:19*60+30,h24:false,defDiff:'medium',jp:false},timeOpen:false,streak:5,won:12,detailsSet:5,sheet:null,modal:null,toast:null,
+  set:{music:true,sfx:false,remind:true,rem:19*60+30,h24:false,defDiff:'medium',jp:false,autoSO:autoSOPref},timeOpen:false,streak:5,won:12,detailsSet:5,sheet:null,modal:null,toast:null,
   open:{N5:true},setsOpen:{N5:true,N4:true,N3:false},hlvl:'N5',studied:new Set([1,2]),seen:new Set(),lesson:0,card:{set:1,i:0,flip:false},duel:null,weak:null};
 SETITEMS[1].forEach(it=>S.seen.add(it.id));SETITEMS[2].slice(0,12).forEach(it=>S.seen.add(it.id));
 const mode=()=>S.theme==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):S.theme;
@@ -256,12 +257,46 @@ function basicsRow(){return `<div class="panel tap" data-act="lesson" style="mar
 const exr=(k,r,m)=>`<div style="display:flex;align-items:center;gap:12px;padding:5px 0">${ja(k,'font-size:30px;font-weight:800;color:#1a1626;min-width:62px;text-align:center;white-space:nowrap','serif')}<div style="min-width:0">${ja(r,'display:block;font-size:19px;font-weight:700;color:#8a5b00;white-space:nowrap')}${m?`<div style="font-size:15px;color:#5f5a74">${m}</div>`:''}</div></div>`;
 const lp=t=>`<p style="font-size:16px;line-height:1.5;color:#1a1626;margin:0 0 10px">${t}</p>`;
 const J=t=>ja(t,'font-weight:700');
+const sk=(k,r,hl)=>`<div style="text-align:center;padding:6px 8px;background:${hl?'#fff3d6':'#fffaf0'};box-shadow:0 0 0 2px ${hl?'#d97706':'#1a1626'}">${ja(k,'display:block;font-size:30px;line-height:1.2;font-weight:800;color:#1a1626;white-space:nowrap','serif')}${ja(r,'display:block;font-size:18px;font-weight:700;color:#8a5b00;white-space:nowrap')}</div>`;
+const mk=n=>`<span class="px" style="display:inline-flex;align-items:center;justify-content:center;min-width:24px;padding:0 3px;box-sizing:border-box;height:24px;flex:none;background:#d97706;color:#fffaf0;font-size:12px;line-height:1;box-shadow:0 0 0 2px #1a1626">${n}</span>`;
+function partsCard(){const k='聞',it=Object.values(ITEMS).find(x=>x.t==='k'&&x.k===k),n=SETITEMS[it.set].indexOf(it);
+  const lab=t=>`<span class="px" style="font-size:13px;color:#7a7590;margin-right:8px">${t}</span>`;
+  const row=(m,html,st='')=>`<div style="display:flex;align-items:center;gap:10px;${st}">${mk(m)}<div style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center">${html}</div></div>`;
+  const strip=`<div style="display:flex;align-items:center;gap:8px;margin:0 0 10px">${mk(6)}<span class="px" style="font-size:12px;color:var(--strong);background:var(--ind);color:#fffaf0;padding:4px 6px">Set ${it.set}</span><span style="font-size:14px;font-weight:700;color:#1a1626;flex:1;text-align:right">Kanji · ${n+1} / ${SETITEMS[it.set].length}</span></div>`;
+  const mini=`<div style="position:relative;background:#f3ead6;box-shadow:inset 0 0 0 2px #fff,0 0 0 3px #1a1626,0 6px 0 0 rgba(26,22,38,.35);padding:8px 12px 10px;margin:0 3px 16px">
+   <div style="position:absolute;top:6px;right:8px;display:flex;align-items:center;gap:6px">${mk(2)}${soPill(STROKES[k].s.length)}</div>
+   ${row(1,ja(k,'font-size:66px;line-height:1.05;font-weight:800;color:#1a1626','serif'),'margin-top:28px')}
+   ${row(3,lab('KUN')+ja(kana(it.kun),'font-size:26px;font-weight:700;color:#8a5b00'),'margin-top:8px')}
+   ${row(4,lab('ON')+ja(it.on.join('・'),'font-size:21px;color:#4a4560;font-weight:500'),'margin-top:6px')}
+   ${row(5,`<span style="font-size:19px;font-weight:700;color:#1a1626">${it.m}</span>`,'margin-top:8px')}</div>`;
+  const li=(m,t)=>`<div style="display:flex;gap:10px;align-items:flex-start;margin:0 0 7px">${mk(m)}<div style="font-size:15px;line-height:1.4;color:#1a1626">${t}</div></div>`;
+  return lp('This is the back (detail side) of a study card:')+strip+mini+
+   li(1,'<b>Kanji</b>: the character you are learning. Tap the card to flip it.')+
+   li(2,`<b>Stroke order</b>: ${STROKES[k].s.length} is the number of strokes. Tap it to watch the kanji drawn one stroke at a time.`)+
+   li('3 4','<b>Readings</b> (KUN, ON): see the next card.')+
+   li(5,'<b>Meaning</b> in English.')+
+   li(6,'<b>Set</b>, card type and your place in the set.')}
+function readLineCard(){const it=Object.values(ITEMS).find(x=>x.t==='k'&&x.k==='聞');
+  const lab=t=>`<span class="px" style="font-size:13px;color:#7a7590;width:44px;flex:none">${t}</span>`;
+  const li=(m,t)=>`<div style="display:flex;gap:10px;align-items:flex-start;margin:0 0 12px">${mk(m)}<div style="font-size:16px;line-height:1.5;color:#1a1626">${t}</div></div>`;
+  return lp(`The readings sit under the kanji. For ${J('聞')} (hear, ask):`)+
+   `<div style="background:#fffaf0;box-shadow:0 0 0 3px #1a1626;padding:10px 14px;margin:2px 3px 16px">
+   <div style="display:flex;align-items:center;gap:10px">${mk(3)}${lab('KUN')}${ja(kana(it.kun),'font-size:28px;font-weight:700;color:#8a5b00')}</div>
+   <div style="display:flex;align-items:center;gap:10px;margin-top:6px">${mk(4)}${lab('ON')}${ja(it.on.join('・'),'font-size:23px;color:#4a4560;font-weight:500')}</div></div>`+
+   li(3,`<b>KUN</b> is the kun’yomi: a reading from a native Japanese word, written in hiragana. The part in brackets is the ending written in hiragana after the kanji, so ${J(kana(it.kun))} is read ${J(it.kun.replace(/[()]/g,''))}.`)+
+   li(4,`<b>ON</b> is the on’yomi: the sound-based reading that came with the character, written in katakana. ${J('・')} separates two readings: ${J('ブン')} as in ${J('見聞')} ${J('けんぶん')} (knowledge, experience).`)+
+   lp(`A dash ${J('—')} means the kanji has no common reading of that kind, for example ${J('電')} has only the on’yomi ${J('デン')}.`)}
 const LESSON=[
- {t:'What is a kanji?',b:()=>lp('Kanji are characters that Japanese borrowed from Chinese. Each kanji carries a meaning:')+exr('日','ひ','sun, day')+exr('山','やま','mountain')+lp('Most kanji can be read in more than one way. Words are built from one or more kanji, often with some hiragana:')+exr('日本','にほん','Japan')+exr('休む','やすむ','to rest')},
- {t:'Two kinds of readings',b:()=>lp(`<b>Kun reading</b> ${J('訓読み')}: the native Japanese reading, shown in hiragana. Used mostly when a kanji stands alone or has a hiragana ending.`)+exr('水','みず','water')+exr('食べる','たべる','to eat')+lp(`<b>On reading</b> ${J('音読み')}: based on the old Chinese sound, shown in katakana. Used mostly in words of two or more kanji.`)+exr('電車','デン・シャ → でんしゃ','train')+exr('大学','ダイ・ガク → だいがく','university')},
+ {t:'Parts of a study card',b:partsCard},
+ {t:'The readings line',b:readLineCard},
+ {t:'What is a kanji?',b:()=>lp('Kanji are writing characters that came to Japan from China long ago and are now a core part of written Japanese. Each kanji carries a meaning:')+exr('日','ひ','sun, day')+exr('山','やま','mountain')+lp('Most kanji can be read in more than one way. Words are built from one or more kanji, often with some hiragana:')+exr('日本','にほん','Japan')+exr('休む','やすむ','to rest')},
+ {t:'Two kinds of readings',b:()=>lp(`<b>Kun’yomi</b> ${J('訓読み')} (KUN on the cards): the reading taken from a native Japanese word with the same meaning, shown in hiragana. Used mostly when a kanji stands alone or has a hiragana ending.`)+exr('水','みず','water')+exr('食べる','たべる','to eat')+lp(`<b>On’yomi</b> ${J('音読み')} (ON on the cards): the sound-based reading that came to Japan along with the character, shown in katakana. Used mostly in words of two or more kanji.`)+exr('電車','デン・シャ → でんしゃ','train')+exr('大学','ダイ・ガク → だいがく','university')},
  {t:'Hiragana in brackets',b:()=>lp(`Verbs and adjectives keep their ending in hiragana after the kanji. This ending is called ${J('送り仮名')} (${J('おくりがな')}).`)+lp('In this app the reading shows that ending in brackets:')+exr('食べる','た(べる)','')+exr('話す','はな(す)','')+exr('高い','たか(い)','')+lp('Before the brackets is the part the kanji is read as; inside is the hiragana written after it. In the quiz you just need the whole reading: '+J('た(べる)')+' = '+J('たべる')+'.')+lp(`Counting words work the same way: ${J('一つ')} ${J('ひと(つ)')}, ${J('三つ')} ${J('み(っつ)')}. The ending, small ${J('っ')} included, is part of the counting word.`)},
  {t:'How quiz answers look',b:()=>lp('Kanji questions show the two most common readings: kun first in hiragana, then on in katakana.')+exr('金',`かね<span class="dvs"></span>キン`,'gold, money')+lp('A few kanji have only one common reading, so only that one is shown:')+exr('校','コウ','school')+exr('何','なに','what')+lp('Vocabulary questions ask for the reading of the whole word in hiragana (katakana for words taken from other languages). Readings are never written in English letters.')+exr('天気','てんき','weather')},
- {t:'Tips',b:()=>lp('The same kanji can sound different in different words:')+exr('日','ひ','sun, day (on its own)')+exr('土日','どにち','weekend')+exr('本日','ほんじつ','today (formal)')+lp(`Sounds can change a little when kanji join: ${J('学')} ${J('ガク')} + ${J('校')} ${J('コウ')} →`)+exr('学校','がっこう','school')+lp('Learn each kanji together with a word that uses it, and check Mastery → Needs work to see your weak items.')}];
+ {t:'Tips',b:()=>lp('The same kanji can sound different in different words:')+exr('日','ひ','sun, day (on its own)')+exr('土日','どにち','weekend')+lp('Sounds can also change a little when kanji join. First each kanji on its own, then the word:')+
+   `<div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;margin:4px 0 12px;flex-wrap:nowrap">${sk('学','がく')}<span style="font-size:22px;font-weight:800;color:#5f5a74;padding-bottom:18px">+</span>${sk('校','こう')}<span style="font-size:22px;font-weight:800;color:#5f5a74;padding-bottom:18px">→</span>${sk('学校','がっこう',true)}</div>`+
+   lp(`The ${J('く')} of ${J('がく')} becomes a small ${J('っ')}, a short pause before ${J('こう')}. (${J('ガク')} and ${J('コウ')} are on’yomi, shown here in hiragana.)`)+
+   lp('Learn each kanji together with a word that uses it. To find your weak items, open <b>Mastery</b> and look at the <b>NEEDS WORK</b> section, then tap <b>Duel weak items</b> to practise them.')}];
 R.lesson=()=>{const i=S.lesson,c=LESSON[i],last=i===LESSON.length-1;
   const dots=LESSON.map((_,k)=>`<span style="width:${k===i?22:12}px;height:12px;background:${k===i?'var(--gold)':(k<i?'var(--offw3)':'var(--chrome2)')};box-shadow:0 0 0 2px var(--ink)"></span>`).join('');
   return `${bg(SCENE.study)}<div class="layer">${STATUS}${hdr('Reading basics','','<div class="tag tap" data-act="ldone" style="font-size:14px;padding:6px 10px">Done</div>')}
@@ -272,42 +307,53 @@ R.lesson=()=>{const i=S.lesson,c=LESSON[i],last=i===LESSON.length-1;
 R.studySel=()=>selection(false); R.duelSel=()=>selection(true);
 /* ---------- stroke order (KanjiVG) ---------- */
 const isK=c=>/[\u4e00-\u9fff々]/.test(c);
-const hasSO=w=>[...w].some(isK)&&[...w].filter(isK).every(c=>STROKES&&STROKES[c]);
-const sog=(w,fs)=>`<div id="sog" data-k="${w}" data-fs="${fs}" style="display:flex;align-items:center;justify-content:center;min-height:${Math.round(fs*1.1)}px">${ja(w,`font-size:${fs}px;line-height:1.1;font-weight:800;color:#1a1626`,'serif')}</div>`;
-const SO_INK='#1a1626',SO_ACC='#d97706',SO_GHOST='#d9d1bd';let soTok=0;
+const hasSO=w=>w.length===1&&isK(w)&&!!(STROKES&&STROKES[w]);   /* single-kanji cards only; vocab has no stroke order */
+const SO_INK='#1a1626',SO_ACC='#d97706',SO_GHOST='#d9d1bd',KBOX=140;let soTok=0;
 window.__so={k:'',total:0,drawn:0,done:false};
-function playStrokes(){const host=document.getElementById('sog');if(!host)return;const tok=++soTok,w=host.dataset.k,fs=+host.dataset.fs,nk=[...w].filter(isK).length,sz=Math.round(Math.max(fs*1.05,Math.min(150,250/nk))),num=sz>=100;
-  host.style.minHeight=Math.max(Math.round(fs*1.1),sz)+'px';
-  host.innerHTML=[...w].map(c=>{const d=isK(c)&&STROKES[c];if(!d)return ja(c,`font-size:${fs}px;line-height:1.1;font-weight:800;color:${SO_INK}`,'serif');
-    const sw=sz>=140?4.5:5;
-    return `<svg class="so" viewBox="0 0 109 109" width="${sz}" height="${sz}" style="flex:none" aria-label="${c} stroke order"><g fill="none" stroke="${SO_GHOST}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${d.s.map(p=>`<path d="${p}"/>`).join('')}</g><g class="sol" fill="none" stroke="${SO_ACC}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${d.s.map(p=>`<path d="${p}"/>`).join('')}</g>${num?`<g class="son" font-family="Noto Sans CJK JP,sans-serif" font-weight="700" font-size="11" fill="${SO_ACC}" stroke="#fffaf0" stroke-width="3" paint-order="stroke">${d.n.map((xy,i)=>`<text x="${xy[0]}" y="${xy[1]}" opacity="0">${i+1}</text>`).join('')}</g>`:''}</svg>`}).join('');
-  const P=[...host.querySelectorAll('.sol path')],N=[...host.querySelectorAll('.son text')];
-  P.forEach(p=>{const L=p.getTotalLength()+1;p.style.strokeDasharray=L;p.style.strokeDashoffset=L;p.dataset.len=L});
-  Object.assign(window.__so,{k:w,total:P.length,drawn:0,done:false,started:performance.now()});
-  const step=i=>{if(tok!==soTok||!host.isConnected)return;
-    if(i>0){P[i-1].style.stroke=SO_INK;if(N[i-1])N[i-1].setAttribute('fill','#7a7590')}
+/* P1 pill: pixel rounded pill (2px cells), brush icon + stroke count */
+const SO_BRUSH=['.........kk.','........kwwk','.......kwwk.','......kwwk..','.....kwwk...','....kwwk....','...kkkk.....','...kaak.....','....aa......','............','.aaaaaaaaa..','aaaaaaaaaaa.'];
+function soPill(n){const Wc=n>9?33:28,Hc=16,r=8,OW='#f3ead6',OW2='#fffaf0',OW3='#b9ad9c',SH='rgba(26,22,38,.45)';
+  const ins=(x,y,i)=>{const xx=x+.5,yy=y+.5,L=i,Rr=Wc-i,T=i,B=Hc-i,rr=r-i;if(xx<L||xx>Rr||yy<T||yy>B)return false;const cx=Math.min(Math.max(xx,L+rr),Rr-rr),cy=Math.min(Math.max(yy,T+rr),B-rr);return Math.hypot(xx-cx,yy-cy)<=rr+.01};
+  let sh='',bd='';for(let y=0;y<Hc;y++)for(let x=0;x<Wc;x++){if(!ins(x,y,0))continue;sh+=`<rect x="${x}" y="${y+2}" width="1" height="1" fill="${SH}"/>`;bd+=`<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${ins(x,y,1)?(y>=Hc-3?OW3:(y<=2?OW2:OW)):SO_INK}"/>`}
+  const cm={k:SO_INK,a:SO_ACC,w:OW2};let ic='';SO_BRUSH.forEach((row,y)=>[...row].forEach((c,x)=>{if(cm[c])ic+=`<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${cm[c]}"/>`}));
+  return `<span class="sopill" style="position:relative;display:block;width:${Wc*2}px;height:${(Hc+2)*2}px"><svg width="${Wc*2}" height="${(Hc+2)*2}" viewBox="0 0 ${Wc} ${Hc+2}" shape-rendering="crispEdges" style="position:absolute;left:0;top:0">${sh}${bd}</svg>
+<span style="position:absolute;left:0;top:1px;width:${Wc*2}px;height:${Hc*2-4}px;display:flex;align-items:center;justify-content:center;gap:4px"><svg width="16" height="16" viewBox="0 0 12 12" shape-rendering="crispEdges" style="display:block;flex:none">${ic}</svg><span class="px" style="font-size:12px;letter-spacing:-1px;line-height:1;color:${SO_INK}">${n}</span></span></span>`}
+const soBtn=k=>`<div class="sobtn" data-act="stroke" role="button" aria-label="Play stroke order (${STROKES[k].s.length} strokes)" style="position:absolute;top:4px;right:12px;min-width:48px;min-height:48px;display:flex;align-items:center;justify-content:center">${soPill(STROKES[k].s.length)}</div>`;
+/* fixed kanji box: the font glyph and the stroke diagram share one KBOX x KBOX box, so nothing moves when drawing starts */
+function kbox(k){const d=STROKES[k];
+  return `<div id="kbox" data-k="${k}" style="position:relative;width:${KBOX}px;height:${KBOX}px;flex:none">${ja(k,`position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:${Math.round(KBOX*.86)}px;line-height:1;font-weight:800;color:${SO_INK};transition:opacity .25s`,'serif kglyph')}
+<svg class="ksvg" viewBox="0 0 109 109" width="${KBOX}" height="${KBOX}" aria-hidden="true" style="position:absolute;inset:0;opacity:0;transition:opacity .25s"><g fill="none" stroke="${SO_GHOST}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">${d.s.map(x=>`<path d="${x}"/>`).join('')}</g><g class="sol" fill="none" stroke="${SO_ACC}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">${d.s.map(x=>`<path d="${x}"/>`).join('')}</g><g class="son" font-family="Noto Sans CJK JP,sans-serif" font-weight="700" font-size="11" fill="${SO_ACC}" stroke="#fffaf0" stroke-width="3" paint-order="stroke">${d.n.map((xy,i)=>`<text x="${xy[0]}" y="${xy[1]}" opacity="0" style="transition:opacity .3s">${i+1}</text>`).join('')}</g></svg></div>`}
+function playStrokes(){const box=document.getElementById('kbox');if(!box)return;const tok=++soTok,k=box.dataset.k;
+  const G=box.querySelector('.kglyph'),V=box.querySelector('.ksvg'),P=[...V.querySelectorAll('.sol path')],N=[...V.querySelectorAll('.son text')];
+  G.style.opacity='0';V.style.opacity='1';
+  P.forEach(p=>{const L=p.getTotalLength()+1;p.style.transition='none';p.style.stroke=SO_ACC;p.style.strokeDasharray=L;p.style.strokeDashoffset=L;p.dataset.len=L});
+  N.forEach(t=>t.setAttribute('opacity','0'));
+  Object.assign(window.__so,{k,total:P.length,drawn:0,done:false,started:performance.now()});
+  const step=i=>{if(tok!==soTok||!box.isConnected)return;
+    if(i>0){P[i-1].style.stroke=SO_INK;if(N[i-1])N[i-1].setAttribute('opacity','0')} /* finished stroke: ink; its number fades so numbers never pile up */
     if(i>=P.length){window.__so.done=true;window.__so.ms=Math.round(performance.now()-window.__so.started);return}
     const p=P[i],dur=Math.round(600+Math.min(1,p.dataset.len/100)*200);
     if(N[i])N[i].setAttribute('opacity','1');
-    p.style.transition=`stroke-dashoffset ${dur}ms linear`;p.getBoundingClientRect();p.style.strokeDashoffset='0';window.__so.drawn=i+1;
+    p.getBoundingClientRect();p.style.transition=`stroke-dashoffset ${dur}ms linear`;p.style.strokeDashoffset='0';window.__so.drawn=i+1;
     setTimeout(()=>step(i+1),dur+60)};
-  step(0)}
+  setTimeout(()=>step(0),180)}
 R.study=()=>{const c=S.card,L=SETITEMS[c.set],it=L[c.i],last=c.i===L.length-1;
   const lab=t=>`<span class="px" style="font-size:13px;color:#7a7590;margin-right:10px">${t}</span>`;
   let front,back;
-  if(it.t==='k'){front=sog(it.k,150);
-    back=`${sog(it.k,96)}
+  const so=c.flip&&it.t==='k'&&hasSO(it.k);
+  if(it.t==='k'){front=ja(it.k,'font-size:150px;line-height:1.1;font-weight:800;color:#1a1626','serif');
+    back=`${so?kbox(it.k):ja(it.k,'font-size:96px;line-height:1.1;font-weight:800;color:#1a1626','serif')}
 <div style="display:flex;align-items:center;margin-top:12px">${lab('KUN')}${ja(it.kun?kana(it.kun):'—','font-size:34px;font-weight:700;color:#8a5b00')}</div>
 <div style="display:flex;align-items:center;margin-top:6px">${lab('ON')}${ja(it.on.length?it.on.join('・'):'—','font-size:26px;color:#4a4560;font-weight:500')}</div>
 <div style="font-size:24px;color:#1a1626;margin-top:14px;font-weight:700">${it.m}</div>`}
-  else{const fs=it.k.length>2?72:96;front=sog(it.k,fs);
-    back=`${sog(it.k,Math.round(fs*.7))}${ja(it.r,'display:block;font-size:34px;font-weight:700;color:#8a5b00;margin-top:14px')}<div style="font-size:24px;color:#1a1626;margin-top:14px;font-weight:700">${it.m}</div>`}
+  else{const fs=it.k.length>2?72:96;front=ja(it.k,`font-size:${fs}px;line-height:1.1;font-weight:800;color:#1a1626`,'serif');
+    back=`${ja(it.k,`font-size:${Math.round(fs*.7)}px;line-height:1.1;font-weight:800;color:#1a1626`,'serif')}${ja(it.r,'display:block;font-size:34px;font-weight:700;color:#8a5b00;margin-top:14px')}<div style="font-size:24px;color:#1a1626;margin-top:14px;font-weight:700">${it.m}</div>`}
   return `${bg(SCENE.study)}<div class="layer">${STATUS}${hdr('Study','学ぶ','<div class="tag tap" data-act="studyDone" style="font-size:14px;padding:6px 10px">Done</div>')}
 <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 22px 0"><span class="plate px" style="font-size:16px;color:var(--strong);padding:0 8px">Set ${c.set}</span><span class="plate" style="font-size:15px;font-weight:700;padding:2px 8px">${it.t==='k'?'Kanji':'Vocabulary'} · ${c.i+1} / ${L.length}</span></div>
 <div style="padding:12px 22px 0"><div style="height:10px;background:var(--ink);padding:2px"><div style="width:${(c.i+1)/L.length*100}%;height:100%;background:var(--gold)"></div></div></div>
 <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:18px 30px">
-<div class="tap" data-act="flip" style="width:100%;height:100%;max-height:450px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--offw);box-shadow:inset 0 0 0 2px #fff,inset 0 -6px 0 0 var(--offw3),0 -3px 0 0 #1a1626,0 3px 0 0 #1a1626,-3px 0 0 0 #1a1626,3px 0 0 0 #1a1626,0 9px 0 0 rgba(26,22,38,.45);padding:20px">
-${c.flip?back:front}<div class="px" style="font-size:15px;color:#5f5a74;margin-top:${hasSO(it.k)?16:24}px">${c.flip?'TAP TO HIDE':'TAP TO REVEAL'}</div>${hasSO(it.k)?`<div class="btn wh sobtn" data-act="stroke" role="button" aria-label="Play stroke order" style="height:54px;font-size:15px;padding:0 18px;margin-top:18px;gap:10px;flex:none">${icon('BRUSH','#2a2440',2)}<span>Stroke order</span></div>`:''}</div></div>
+<div class="tap" data-act="flip" style="position:relative;width:100%;height:100%;max-height:450px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--offw);box-shadow:inset 0 0 0 2px #fff,inset 0 -6px 0 0 var(--offw3),0 -3px 0 0 #1a1626,0 3px 0 0 #1a1626,-3px 0 0 0 #1a1626,3px 0 0 0 #1a1626,0 9px 0 0 rgba(26,22,38,.45);padding:20px">
+${c.flip?back:front}<div class="px" style="font-size:15px;color:#5f5a74;margin-top:24px">${c.flip?'TAP TO HIDE':'TAP TO REVEAL'}</div>${so?soBtn(it.k):''}</div></div>
 <div style="padding:0 26px 44px;display:flex;gap:18px"><div class="btn out ${c.i?'':'dis2'}" style="flex:1;font-size:18px" data-act="prev">${icon('CHL','currentColor',2)} Prev</div><div class="btn wh" style="flex:1.4;font-size:20px" data-act="${last?'studyDone':'next'}">${last?'Done '+icon('CHECK','#2a2440',2):'Next '+icon('CHR','#2a2440',2)}</div></div></div>`};
 function diffRow(key,pipn){const d=DIFF[key],sel=S.diff===key,tc=sel?'var(--seltxt)':'var(--strong)',mc=sel?'var(--selmut)':'var(--mut)',rg=sel?'background:var(--gold);color:var(--ind)':'background:var(--chrome2);color:var(--txt)';
   return `<div class="panel tap ${sel?'sel':''}" data-act="diff:${key}" style="padding:16px 16px;margin-top:22px;display:flex;gap:14px;align-items:center">${JL()?`<div style="width:54px;height:54px;flex:none;display:flex;align-items:center;justify-content:center;${rg};box-shadow:0 0 0 3px var(--ink)">${ja(d.jp[0],'font-size:26px;font-weight:700;line-height:1','serif')}</div>`:''}
@@ -409,6 +455,7 @@ ${scroll(`<div class="panel" style="margin-top:16px;padding:10px 14px 12px">${se
 <div class="panel" style="margin-top:14px;padding:6px 14px 0">${sec('REMINDERS','通知')}${srow('Daily reminder','Keep your streak alive',toggle(rm,'tog:remind'))}
 ${srow('Reminder time',rm?(S.timeOpen?'Tap to close':'Tap to change'):'Turn on the reminder first',`<span class="li" style="font-size:16px;font-weight:900;color:${rm?'var(--acc)':'var(--mut)'}">${fmtTime(S.set.rem)} ${chev(S.timeOpen&&rm,rm?'var(--acc)':'var(--mut)')}</span>`,false,'topen')}${S.timeOpen&&rm?timePicker():''}
 ${srow('24-hour time',S.set.h24?'e.g. 19:30':'e.g. 7:30 PM',toggle(S.set.h24,'tog:h24'),true)}</div>
+<div class="panel" style="margin-top:14px;padding:6px 14px 0">${sec('STUDY','学習')}${srow('Auto-play stroke order','Draw the kanji when a card is flipped',toggle(S.set.autoSO,'tog:autoSO'),true)}</div>
 <div class="panel" style="margin-top:14px;padding:6px 14px 0">${sec('DUEL','決闘')}${srow('Default difficulty','Pre-selected on the pace screen',`<span class="li" style="font-size:15px;font-weight:900;color:var(--txt);white-space:nowrap">${pips(dd.lv)} ${dd.n} · ${dd.sec}s ${arrowR}</span>`,true,'defdiff')}</div>
 <div class="panel" style="margin-top:14px;padding:6px 14px 0">${sec('ACCOUNT','データ')}${srow('Restore purchases','Google Play',arrowR,false,'restore')}${srow('Reset progress','Clears mastery &amp; streak',arrowR,false,'reset')}${srow('About Kanji Duel','Version 1.0 · Licences · Privacy',arrowR,true,'about')}</div>
 <div style="font-size:13px;line-height:1.5;color:var(--txt);margin:14px 4px 24px;text-align:center" class="plate">Stroke order data: KanjiVG, © Ulrich Apel, CC BY-SA 3.0</div>`,'padding:4px 18px 0')}</div>`};
@@ -473,7 +520,7 @@ function act(a){const [k,v]=a.split(/:(.*)/s);const d=S.duel;
   case 'dpick':{const n=+v;S.duelSets.has(n)?S.duelSets.delete(n):S.duelSets.add(n);render();break}
   case 'studyset':S.card={set:+v,i:0,flip:false};S.studied.add(+v);go('study');break;
   case 'stroke':playStrokes();break;
-  case 'flip':S.card.flip=!S.card.flip;markSeen();render();break;
+  case 'flip':S.card.flip=!S.card.flip;markSeen();render();if(S.card.flip&&S.set.autoSO&&document.getElementById('kbox'))playStrokes();break;
   case 'next':markSeen();S.card.i++;S.card.flip=false;render();break;
   case 'prev':if(S.card.i>0){S.card.i--;S.card.flip=false;render()}break;
   case 'lesson':S.lesson=0;go('lesson');break;
@@ -493,7 +540,7 @@ function act(a){const [k,v]=a.split(/:(.*)/s);const d=S.duel;
   case 'done':S.duel=null;S.weak=null;home();break;
   case 'weak':S.weak=weakList();if(!S.weak.length){S.weak=null;toast('No weak items right now');break}go('difficulty');break;
   case 'theme':S.theme=v;try{localStorage.setItem('kd-theme',v)}catch(e){}render();break;
-  case 'tog':S.set[v]=!S.set[v];if(v==='remind'&&!S.set.remind)S.timeOpen=false;render();break;
+  case 'tog':S.set[v]=!S.set[v];if(v==='autoSO')try{localStorage.setItem('kd-autoso',S.set.autoSO?'1':'0')}catch(e){}if(v==='remind'&&!S.set.remind)S.timeOpen=false;render();break;
   case 'topen':if(S.set.remind){S.timeOpen=!S.timeOpen;render()}else toast('Turn on Daily reminder first');break;
   case 'tstep':S.set.rem=(S.set.rem+(+v)+1440)%1440;render();break;
   case 'tampm':{const pm=S.set.rem>=720;if((v==='PM')!==pm)S.set.rem=(S.set.rem+720)%1440;render();break}
