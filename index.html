@@ -439,6 +439,22 @@ function acceptIcon(id,s=0){const rows=AICONS&&AICONS.icons[id];if(!rows)return 
   return `<svg class="ico aico" data-icon="${id}" width="${w*s}" height="${h*s}" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" role="img" aria-label="${id} icon" style="flex:none;margin-top:-2px">${r}</svg>`}
 function icon(name,col,s=2,extra=''){const rows=ICONS[name],w=rows[0].length,h=rows.length;let r='';rows.forEach((row,y)=>{for(let x=0;x<w;x++)if(row[x]==='#')r+=`<rect x="${x}" y="${y}" width="1" height="1"/>`});
   return `<svg class="ico" width="${w*s}" height="${h*s}" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" style="fill:${col};${extra}">${r}</svg>`}
+/* v18: pause glyph (two bars), drawn pixel-exact in DEVICE pixels.
+   v17 used a 7x8 SVG at 2 CSS px per cell. The phone frame is scaled by fit() (scale = screen width / 412 on phones), so at most real
+   screen sizes and DPRs each bar edge landed on a fraction of a device pixel and was rounded or antialiased on its own: one bar came out
+   a device pixel wider (or softer) than the other.
+   Now: k = devicePixelRatio x frame scale = device px per design px. Both bars are W = round(4k) device px wide, the second starts
+   G = round(10k) device px after the first, height H = round(16k). They are painted into a tiny bitmap at exactly that size (2 px clear
+   margin) and shown as an <img> that cancels the frame scale, so it is drawn 1 bitmap px = 1 device px with image-rendering:pixelated.
+   A 1:1 nearest-neighbour copy cannot blend or resize one bar differently from the other, wherever the frame puts it. Cached per (k, colour). */
+const PZ_CACHE={};
+function pauseGlyph(col='#2a2440'){const D=window.devicePixelRatio||1,k=D*(window.__frameScale||1),W=Math.max(1,Math.round(4*k)),G=Math.max(W+1,Math.round(10*k)),H=Math.max(2,Math.round(16*k)),M=2;
+  const key=k.toFixed(5)+col;let u=PZ_CACHE[key];
+  if(!u){try{const c=document.createElement('canvas');c.width=G+W+2*M;c.height=H+2*M;const x=c.getContext('2d');x.fillStyle=col;x.fillRect(M,M,W,H);x.fillRect(M+G,M,W,H);u=PZ_CACHE[key]=c.toDataURL('image/png')}catch(e){u=''}}
+  const BW=G+W+2*M,BH=H+2*M,sc=window.__frameScale||1;
+  if(!u)return `<svg width="14" height="16" viewBox="0 0 7 8" shape-rendering="crispEdges" style="fill:${col}"><rect x="0" y="0" width="2" height="8"/><rect x="5" y="0" width="2" height="8"/></svg>`;
+  // the <img> undoes the frame's scale (scale(1/frame scale)) so it is drawn at exactly 1 bitmap px = 1 device px; the outer span holds its on-screen size for layout
+  return `<span class="pzg" aria-hidden="true" data-w="${W}" data-g="${G}" data-h="${H}" data-k="${k}" style="position:relative;display:block;flex:none;width:${BW/k}px;height:${BH/k}px"><img alt="" draggable="false" src="${u}" style="position:absolute;left:0;top:0;display:block;width:${BW/D}px;height:${BH/D}px;max-width:none;image-rendering:pixelated;transform-origin:0 0;transform:scale(${1/sc});pointer-events:none"></span>`}
 const chev=(open=false,col='var(--acc)')=>`<span class="chev${open?' open':''}">${icon('CHR',col,2)}</span>`;
 const star=(s=2,col='var(--gold)')=>icon('STAR',col,s,'filter:drop-shadow(1px 1px 0 var(--ink))');
 const pips=n=>'<span class="pips">'+[0,1,2].map(i=>`<span class="pip ${i<n?'emh'[i]:''}"></span>`).join('')+'</span>';
@@ -692,7 +708,7 @@ R.play=()=>{const d=S.duel,q=d.qs[d.i],[c,en,jp]=d.opp,fb=d.phase==='fb',r=d.res
   const qs=q.q.length===1?100:q.q.length===2?58:40, sec=DIFF[S.diff].sec, frac=fb?Math.max(0,r.left)/sec:1;
   return `<div style="position:absolute;left:0;right:0;top:0;height:${ANSTOP}px;overflow:hidden">${duelBg(d.scene)}
 <div class="a-wlg-${c}" style="position:absolute;left:60px;top:${ANSTOP-3-456}px;width:348px;height:456px;background-size:348px 456px;background-repeat:no-repeat;image-rendering:pixelated"></div><div style="position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--ink)"></div></div>
-<div class="layer">${STATUS}<div style="display:flex;align-items:center;padding:10px 16px 0;gap:10px">${S.set.pauseBtn?`<div class="sq" data-act="pause" aria-label="Pause"><svg width="14" height="16" viewBox="0 0 7 8" shape-rendering="crispEdges" style="fill:#2a2440"><rect x="0" y="0" width="2" height="8"/><rect x="5" y="0" width="2" height="8"/></svg></div>`:`<div class="sq-ph" aria-hidden="true" style="width:44px;height:44px;flex:none;visibility:hidden"></div>`}
+<div class="layer">${STATUS}<div style="display:flex;align-items:center;padding:10px 16px 0;gap:10px">${S.set.pauseBtn?`<div class="sq" data-act="pause" aria-label="Pause">${pauseGlyph()}</div>`:`<div class="sq-ph" aria-hidden="true" style="width:44px;height:44px;flex:none;visibility:hidden"></div>`}
 <div style="flex:1;text-align:center"><span class="plate px" style="padding:0 10px;font-size:28px;font-weight:700;color:var(--strong)">${d.i+1}<span style="font-size:17px;color:var(--mut)"> / ${d.qs.length}</span></span></div><div class="tag" style="font-size:14px">N5-${q.item.set}</div></div>
 <div style="padding:12px 18px 0"><div style="height:14px;background:var(--ink);padding:3px"><div id="tbar" style="width:${frac*100}%;height:100%;background:var(--gold)"></div></div>
 <div style="display:flex;justify-content:space-between;margin-top:6px"><span class="plate ttl" style="font-size:14px;font-weight:700;padding:0 6px;gap:6px"><span>${en}</span>${jl(jp,'font-size:14px')}</span><span class="plate" id="tleft" style="font-size:14px;font-weight:700;padding:0 6px">${(frac*sec).toFixed(1)}s left</span></div></div></div>
@@ -828,7 +844,8 @@ const OPP_BG={
   samurai:          {p:[...TRAD,...KYOTO,'night_temple_garden','tea_house','castle_throne_hall','riverbank_sakura'], s:['yatai_street','festival_street']},
   shogun:           {p:[...TRAD,...KYOTO,'night_temple_garden','tea_house','castle_throne_hall'], s:['festival_street','riverbank_sakura'], w:{castle_throne_hall:12}},
   geisha:           {p:[...TRAD,'festival_street',...KYOTO,'night_temple_garden','tea_house','riverbank_sakura'], s:['bathhouse_lobby','castle_throne_hall'], w:{tea_house:12,kyoto_cherry_lane:9,kyoto_pagoda_sunset:9}},
-  sumo:             {p:[...TRAD,'festival_street','bathhouse_lobby',...KYOTO,'tea_house'], s:['yatai_street','tokyo_rooftop','night_temple_garden','castle_throne_hall','riverbank_sakura']},
+  // v18: no snow shrine for the sumo (user: outdoors in the snow doesn't suit him); the rest of TRAD stays
+  sumo:             {p:[...TRAD.filter(x=>x!=='snow_shrine'),'festival_street','bathhouse_lobby',...KYOTO,'tea_house'], s:['yatai_street','tokyo_rooftop','night_temple_garden','castle_throne_hall','riverbank_sakura']},
   // stealth: night and cover; the rest of the traditional set as overlap; a rare modern sighting
   ninja:            {p:['bamboo_dusk','tokyo_rooftop','castle_courtyard','rain_alley','snow_shrine','night_temple_garden','kyoto_pagoda_sunset'], s:['dojo','sakura_garden','yatai_street','sea_torii','festival_street','kyoto_cherry_lane'], r:['train_platform_night','tea_house','castle_throne_hall','riverbank_sakura']},
   kunoichi:         {p:['bamboo_dusk','tokyo_rooftop','castle_courtyard','rain_alley','snow_shrine','night_temple_garden'], s:['dojo','sakura_garden','yatai_street','sea_torii','festival_street',...KYOTO], r:['akihabara_neon','train_platform_night','tea_house','castle_throne_hall','riverbank_sakura']},
@@ -954,9 +971,12 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(S
 function fit(){const f=document.getElementById('frame'),hint=document.getElementById('hint'),W=innerWidth,H=innerHeight;
   const phone=(W<600)||matchMedia('(pointer:coarse)').matches&&W<900;document.body.classList.toggle('mobile',phone);
   const fw=phone?412:436,fh=phone?915:939,s=phone?Math.min(W/fw,H/fh):Math.min(1,(H-56)/fh,(W-40)/fw);
-  f.style.transform=`scale(${s})`;f.style.left=Math.round((W-fw*s)/2)+'px';f.style.top=Math.round(phone?(H-fh*s)/2:Math.max(8,(H-28-fh*s)/2))+'px';
-  hint.style.top=Math.round(phone?H:(parseFloat(f.style.top)+fh*s+8))+'px'}
+  const ch=window.__frameScale!==s;window.__frameScale=s;f.style.transform=`scale(${s})`;f.style.left=Math.round((W-fw*s)/2)+'px';f.style.top=Math.round(phone?(H-fh*s)/2:Math.max(8,(H-28-fh*s)/2))+'px';
+  hint.style.top=Math.round(phone?H:(parseFloat(f.style.top)+fh*s+8))+'px';
+  if(ch&&typeof S!=='undefined'&&S.screen==='play')render()}
 addEventListener('resize',fit);fit();
+// v18: re-render when the device pixel ratio changes (zoom, moving to another screen) so the pause glyph re-snaps
+(function watchDpr(){const m=matchMedia(`(resolution: ${window.devicePixelRatio||1}dppx)`);const f=()=>{m.removeEventListener?.('change',f);if(S.screen==='play')render();watchDpr()};m.addEventListener?.('change',f)})();
 S.diff=S.set.defDiff;render();
 (document.fonts&&document.fonts.ready||Promise.resolve()).then(()=>render());
 window.__LESSON=LESSON;window.__S=S;window.__act=act;window.__ITEMS=ITEMS;window.__SETITEMS=SETITEMS;window.__makeQ=makeQ;window.__DIFF=DIFF;window.__OPP=OPP;window.__BG=BG;window.__OPP_BG=OPP_BG;window.__bgPool=bgPool;window.__pickScene=pickScene;window.__BG_ONLY=BG_ONLY;window.__AICONS=AICONS;
