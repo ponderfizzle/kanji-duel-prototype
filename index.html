@@ -46,6 +46,9 @@ body{font-family:'Noto Sans CJK JP',sans-serif;color:var(--txt);-webkit-font-smo
  
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#15121f}
 body{-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+/* v20: nothing in the app can be selected or long-press-callout'ed except the typed-answer field */
+body,#phone,#phone *{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+#phone #tin input{user-select:text;-webkit-user-select:text;-webkit-touch-callout:none}
 #frame{position:absolute;transform-origin:0 0;padding:12px;background:#0b0a10;border-radius:40px;box-shadow:0 0 0 2px #2e2a40,0 20px 60px rgba(0,0,0,.6)}
 body.mobile #frame{padding:0;border-radius:0;box-shadow:none;background:none}
 #phone{border-radius:28px}
@@ -502,13 +505,28 @@ function tinEl(){let t=document.getElementById('tin');if(t)return t;const ph=doc
 <div class="btn wh tin-sub" data-act="tsub" role="button" aria-label="Submit answer">Submit</div></div><div class="tin-exp"></div>`;
   ph.appendChild(t);const el=t.querySelector('input');
   const sync=e=>{const d=S.duel;if(!d||d.phase!=='ask'){if(el.value)el.value='';tinDisp();return}
-    if(!(e&&e.isComposing)){const r=toKana(el.value),nv=r.done+r.rest;if(nv!==el.value){el.value=nv;try{el.setSelectionRange(nv.length,nv.length)}catch(_){}}}tinDisp()};
+    if(!(e&&e.isComposing)){const r=toKana(el.value),nv=r.done+r.rest;if(nv!==el.value){el.value=nv}}tinDisp()};
   el.addEventListener('input',sync);el.addEventListener('compositionend',sync);
-  el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();act('tsub')}});
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(!e.repeat)tinSubmit('enter')}});
   el.addEventListener('focus',()=>{tinDisp();fit()});el.addEventListener('blur',()=>{tinDisp();setTimeout(fit,0)});
-  /* tapping Submit must not take focus away from the field (that would close the phone keyboard) */
-  const sub=t.querySelector('.tin-sub');['pointerdown','mousedown','touchstart'].forEach(ev=>sub.addEventListener(ev,e=>{if(document.activeElement===el)e.preventDefault()},{passive:false}));
+  /* v20: Submit, robust with the phone keyboard open. v19 called preventDefault() on touchstart, which in Chrome cancels the tap's click,
+     so with the keyboard up (field focused) a tap on Submit did nothing. Now:
+     - touch: the tap is handled on touchend (touch events stay on the element the finger went down on, even if the keyboard closes and the
+       layout moves before the finger lifts); touchend preventDefault() stops the synthetic mouse events/click, so focus never leaves the field.
+       A finger that moved more than 24px is treated as a scroll, not a tap.
+     - mouse/pen: mousedown/pointerdown preventDefault() keeps focus in the field; the click submits.
+     - one guarded entry point (tinSubmit) so a touchend + a stray click (or Enter) can never submit twice. */
+  const sub=t.querySelector('.tin-sub');sub.setAttribute('tabindex','-1');let tst=null;
+  ['pointerdown','mousedown'].forEach(ev=>sub.addEventListener(ev,e=>{tinClearSel();if(e.pointerType==='touch')return;if(document.activeElement===el)e.preventDefault()}));
+  sub.addEventListener('touchstart',e=>{tinClearSel();const p=e.changedTouches[0];tst=p?{x:p.clientX,y:p.clientY,f:document.activeElement===el}:null},{passive:true});
+  sub.addEventListener('touchmove',e=>{const p=e.changedTouches[0];if(tst&&p&&Math.hypot(p.clientX-tst.x,p.clientY-tst.y)>24)tst=null},{passive:true});
+  sub.addEventListener('touchcancel',()=>{tst=null});
+  sub.addEventListener('touchend',e=>{const p=e.changedTouches[0],ok=tst&&p&&Math.hypot(p.clientX-tst.x,p.clientY-tst.y)<=24,wasF=tst&&tst.f;tst=null;if(!ok)return;
+    if(e.cancelable)e.preventDefault();e.stopPropagation();tinSubmit('touch');if(wasF&&document.activeElement!==el)tinFocus()},{passive:false});
+  sub.addEventListener('click',e=>{e.stopPropagation();e.preventDefault();tinSubmit('click')});
   t.querySelector('.tin-box').addEventListener('click',()=>el.focus());
+  /* v20: no long-press menu / selection start anywhere in the phone except the field */
+  if(!window.__kdCtx){window.__kdCtx=1;document.addEventListener('contextmenu',e=>{if(e.target!==el&&document.getElementById('phone').contains(e.target))e.preventDefault()})}
   return t}
 function tinDisp(){const t=document.getElementById('tin');if(!t)return;const el=t.querySelector('input'),dp=t.querySelector('.tin-disp'),d=S.duel;
   if(d&&d.phase==='fb'){const r=d.res[d.i];dp.innerHTML=ja(escH(r.chosen));return}
@@ -524,7 +542,19 @@ function tinRender(){const d=S.duel,show=S.screen==='play'&&d&&d.typing&&!S.moda
   t.querySelector('.tin-sub').style.display=fb?'none':'';
   const ex=t.querySelector('.tin-exp');ex.innerHTML=fb?`<div class="plate"><span class="tin-st px" style="color:var(--${r.correct?'good':'bad'}2)">${r.correct?'CORRECT':'WRONG'}</span><span class="tin-lab">${r.correct?'Readings':'Answer'}</span> <b class="tin-ans">${rd(q.answer)}</b></div>`:'';
   tinDisp()}
+/* v20: single guarded submit. A second call for the same question and the same field text within 400 ms is dropped (touchend + click, double tap, Enter + tap). */
+let tinLast={k:'',t:-1e9};window.__tinSubmits=0;
+function tinSubmit(src){const d=S.duel,now=performance.now();if(!d||!d.typing||d.phase!=='ask'||S.screen!=='play')return;const el=document.getElementById('tinput'),k=d.i+':'+(el?el.value:'');if(k===tinLast.k&&now-tinLast.t<400)return;tinLast={k,t:now};
+  window.__tinSubmits++;window.__tinLastSrc=src;act('tsub')}
 function tinReset(){const t=tinEl();if(t){const el=t.querySelector('input');el.value=''}}
+/* v20: drop any stale page selection (a stuck selection handle on the phone made Submit taps fail; the Quit-box round trip cleared it).
+   Only a selection outside the field is removed, so the field's own caret / focus is untouched. */
+function tinClearSel(){try{const s=getSelection(),el=document.getElementById('tinput');if(!s||!s.rangeCount)return;const n=s.anchorNode,box=el&&el.parentNode;
+  if(document.activeElement===el&&(n===box||n===el))return;s.removeAllRanges()}catch(e){}}
+/* v20: each new typed question gets the same clean state as the Quit-box round trip (blur -> render -> focus): clear the selection,
+   blur the field, empty it, render, focus again. All in one task, so the phone keyboard should not get a frame to close. */
+function tinFresh(){const el=document.getElementById('tinput'),had=!!el&&document.activeElement===el;tinClearSel();if(had)el.blur();tinReset();render();
+  tinFocus();window.__tinFresh=(window.__tinFresh||0)+1}
 function tinFocus(){const el=document.getElementById('tinput');if(el&&S.duel&&S.duel.typing&&!S.modal){try{el.focus({preventScroll:true})}catch(e){el.focus()}}}
 function tinBlur(){const el=document.getElementById('tinput');if(el&&document.activeElement===el)el.blur()}
 function tinShake(){const b=document.querySelector('#tin .tin-box');if(!b)return;b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}
@@ -996,7 +1026,7 @@ function duelBg(sc){const b=BG[sc];if(!b||b.theme)return bg(SCENE.play,'top:0;ma
 function chalBg(sc){const b=BG[sc];if(!b||b.theme)return bg(SCENE.challenge);const p=b.chal;
   return `<div class="bg a-duel-${sc}" style="left:0;top:0;margin:-${p[1]*3}px 0 0 -${p[0]*3}px"></div>`}
 let raf=0,fbTimer=0;
-function startQ(){const d=S.duel;d.phase='ask';d.t0=performance.now();if(d.typing){d.deadline=Infinity;tinReset();render();tinFocus();return}d.deadline=d.t0+DIFF[S.diff].sec*1000;render();loop()}
+function startQ(){const d=S.duel;d.phase='ask';d.t0=performance.now();if(d.typing){d.deadline=Infinity;tinFresh();return}d.deadline=d.t0+DIFF[S.diff].sec*1000;render();loop()}
 function loop(){cancelAnimationFrame(raf);const d=S.duel;if(!d||S.screen!=='play'||d.phase!=='ask'||d.paused||d.typing)return;
   const sec=DIFF[S.diff].sec,left=(d.deadline-performance.now())/1000;
   if(left<=0){answer(-1);return}
