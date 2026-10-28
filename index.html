@@ -113,12 +113,19 @@ body.mobile #hint{display:none}
 #tin .tin-st{display:none;font-size:14px}
 .shake{animation:tshake .32s}
 @keyframes tshake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
-body.kbopen #tin{top:314px;padding-top:0}
+body.kbopen #tin{top:278px;padding-top:0}
 body.kbopen #tin .tin-hint{display:none}
 body.kbopen #tin .tin-main{flex-direction:row;gap:16px}
 body.kbopen #tin .tin-sub{width:118px;flex:none;height:64px;font-size:16px}
 body.kbopen #tin .tin-st{display:inline}
 body.kbopen #phone .badge{display:none!important}
+/* v24: result banner at the top of the question card; keyboard-open layout lifted 36px (name plate hidden) */
+body.kbopen #phone .oname{visibility:hidden}
+body.kbopen #phone .qcard{top:88px!important}
+.qcard .qban{position:absolute;left:0;right:0;top:0;height:34px;display:flex;align-items:center;justify-content:center;gap:7px;color:#fff;font-size:15px;font-weight:700;letter-spacing:1px;white-space:nowrap;box-shadow:0 0 0 3px #1a1626;z-index:1}
+.qcard .qban span{font-family:inherit;text-shadow:2px 2px 0 rgba(0,0,0,.35)}
+.qcard .qban-ok{background:var(--good3);box-shadow:inset 0 3px 0 0 var(--good),0 3px 0 0 #1a1626}
+.qcard .qban-no,.qcard .qban-tu{background:var(--bad3);box-shadow:inset 0 3px 0 0 var(--bad),0 3px 0 0 #1a1626}
 /* v21/v22: typed reading + meaning questions */
 #tin.two{display:flex;flex-direction:column}
 #tin .tin-ovr{display:none}
@@ -938,6 +945,8 @@ R.challenge=()=>{const d=S.duel,[c,en,jp,tk,taunt]=d.opp,fs=nameSize(en,jp),df=D
 const UTAIL='<svg style="position:absolute;left:50%;margin-left:-15px;top:-13px" width="30" height="13" viewBox="0 0 10 4" shape-rendering="crispEdges" aria-hidden="true"><path d="M4 0h2v1h1v1h1v1h1v1h-8v-1h1v-1h1v-1h1z" fill="#1a1626"/><path d="M4 1h2v1h1v1h1v1h-6v-1h1v-1h1z" fill="#f3ead6"/></svg>';
 const BUBBLE_TAIL='<svg style="position:absolute;right:-12px;top:58px" width="12" height="30" viewBox="0 0 4 10" shape-rendering="crispEdges"><path d="M0 0h1v1h1v1h1v1h1v1h-1v1h-1v1h-1v1h-1z" fill="#1a1626"/><path d="M0 1h1v1h1v1h1v1h-1v1h-1v1h-1z" fill="#f3ead6"/></svg>';
 const ANSTOP=598;
+/* v24: pixel cross for the INCORRECT / TIME UP banner (same 2px grid as the CHECK icon) */
+const XGLYPH=(()=>{let r='';for(let i=0;i<7;i++){r+=`<rect x="${i}" y="${i}" width="1" height="1"/><rect x="${6-i}" y="${i}" width="1" height="1"/>`;if(i<6)r+=`<rect x="${i+1}" y="${i}" width="1" height="1"/><rect x="${5-i}" y="${i}" width="1" height="1"/>`}return `<svg width="14" height="14" viewBox="0 0 7 7" shape-rendering="crispEdges" fill="#fff" aria-hidden="true">${r}</svg>`})();
 R.play=()=>{const d=S.duel,q=d.qs[d.i],[c,en,jp]=d.opp,fb=d.phase==='fb',r=d.res[d.i],typ=d.typing,QT=typ?QTOP_T:152;
   const ob=(t,i)=>{let cls='btn wh',ic='',st='';
     if(fb){const isAns=t===q.answer,chosen=r.chosen===t;
@@ -949,7 +958,11 @@ R.play=()=>{const d=S.duel,q=d.qs[d.i],[c,en,jp]=d.opp,fb=d.phase==='fb',r=d.res
     return `<div class="${cls} ans" ${fb?'':`data-act="ans:${i}"`} style="height:60px;padding:0 44px;font-family:'Noto Sans CJK JP',sans-serif;font-weight:500;font-size:${fs}px;letter-spacing:0;white-space:nowrap;${st}"><span class="px" style="position:absolute;left:16px;font-size:18px;opacity:.7">${'ABCD'[i]}</span><span class="atx">${rd(t)}</span>${ic}</div>`};
   let note='';
   if(fb){const ok=r.correct,txt=ok?'CORRECT':(r.chosen===null?'TIME UP':'WRONG'),jtx=ok?'正解！':(r.chosen===null?'時間切れ':'不正解');
-    note=`<div class="badge" style="position:absolute;left:16px;top:${QT+198}px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;z-index:3"><div class="px" style="display:flex;align-items:center;gap:8px;background:var(--${ok?'good':'bad'});color:#fff;font-weight:700;font-size:20px;padding:5px 12px;box-shadow:inset 0 -4px 0 0 var(--${ok?'good3':'bad3'}),0 0 0 3px #1a1626;text-shadow:2px 2px 0 ${ok?'#1d4630':'#5e1420'}">${ok?icon('CHECK','#fff',2):'✕'} ${txt}</div>${JL()?`<div class="plate" style="padding:0 6px">${ja(jtx,'font-size:22px;color:var(--strong);font-weight:700','serif')}</div>`:''}</div>`}
+    /* v24: the verdict now lives in the question card (qban); this note only keeps the optional Japanese plate (hidden while the keyboard is open) */
+    note=JL()?`<div class="badge" style="position:absolute;left:16px;top:${QT+198}px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;z-index:3"><div class="plate" style="padding:0 6px">${ja(jtx,'font-size:22px;color:var(--strong);font-weight:700','serif')}</div></div>`:''}
+  /* v24: result banner at the very top of the question card (always above the keyboard) + green/red inner border */
+  const vk=fb?(r.correct?'ok':(r.chosen===null?'tu':'no')):'',vcol=vk==='ok'?'var(--good)':'var(--bad)';
+  const qban=fb?`<div class="px qban qban-${vk}" role="status" aria-live="polite">${vk==='ok'?icon('CHECK','#fff',2):XGLYPH}<span>${vk==='ok'?'CORRECT':vk==='tu'?'TIME UP':'INCORRECT'}</span></div>`:'';
   const qs=q.q.length===1?100:q.q.length===2?58:40, sec=DIFF[S.diff].sec, frac=fb?Math.max(0,r.left)/sec:1;
   return `<div style="position:absolute;left:0;right:0;top:0;height:${ANSTOP}px;overflow:hidden">${duelBg(d.scene)}
 <div class="a-wlg-${c}" style="position:absolute;left:60px;top:${ANSTOP-3-456}px;width:348px;height:456px;background-size:348px 456px;background-repeat:no-repeat;image-rendering:pixelated"></div><div style="position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--ink)"></div></div>
@@ -957,8 +970,8 @@ R.play=()=>{const d=S.duel,q=d.qs[d.i],[c,en,jp]=d.opp,fb=d.phase==='fb',r=d.res
 <div style="flex:1;text-align:center"><span class="plate px" style="padding:0 10px;font-size:28px;font-weight:700;color:var(--strong)">${d.i+1}<span style="font-size:17px;color:var(--mut)"> / ${d.qs.length}</span></span></div><div class="tag" style="font-size:14px">N5-${q.item.set}</div></div>
 ${typ?`<div class="oname" style="padding:10px 18px 0;display:flex"><span class="plate ttl" style="font-size:14px;font-weight:700;padding:0 6px;gap:6px"><span>${en}</span>${jl(jp,'font-size:14px')}</span></div></div>`:`<div style="padding:12px 18px 0"><div style="height:14px;background:var(--ink);padding:3px"><div id="tbar" style="width:${frac*100}%;height:100%;background:var(--gold)"></div></div>
 <div style="display:flex;justify-content:space-between;margin-top:6px"><span class="plate ttl" style="font-size:14px;font-weight:700;padding:0 6px;gap:6px"><span>${en}</span>${jl(jp,'font-size:14px')}</span><span class="plate" id="tleft" style="font-size:14px;font-weight:700;padding:0 6px">${(frac*sec).toFixed(1)}s left</span></div></div></div>`}
-<div class="qcard" style="position:absolute;left:16px;top:${QT}px;width:146px;min-height:168px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;background:var(--offw);z-index:2;box-shadow:inset 0 0 0 2px #fff,inset 0 -4px 0 0 var(--offw3),0 -3px 0 0 #1a1626,0 3px 0 0 #1a1626,-3px 0 0 0 #1a1626,3px 0 0 0 #1a1626,0 9px 0 0 rgba(26,22,38,.45)">
-<div class="px" style="font-size:14px;font-weight:700;color:var(--ind);opacity:.75;text-align:center;margin-bottom:6px;white-space:nowrap">${d.two?(q.part==='m'?'MEANING':'READING'):q.label}</div>${ja(q.q,`font-family:'Shippori Mincho B1','Noto Serif CJK JP',serif;font-weight:800;font-size:${qs}px;line-height:1.15;color:#1a1626;text-align:center;white-space:nowrap`)}${BUBBLE_TAIL}</div>${note}
+<div class="qcard${fb?` qv qv-${vk}`:''}" style="position:absolute;left:16px;top:${QT}px;width:146px;min-height:168px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;background:var(--offw);z-index:2;box-shadow:${fb?`inset 0 0 0 3px ${vcol}`:'inset 0 0 0 2px #fff'},inset 0 -4px 0 0 var(--offw3),0 -3px 0 0 #1a1626,0 3px 0 0 #1a1626,-3px 0 0 0 #1a1626,3px 0 0 0 #1a1626,0 9px 0 0 rgba(26,22,38,.45)">
+${qban}<div class="px qlab" style="font-size:14px;font-weight:700;color:var(--ind);opacity:.75;text-align:center;margin-bottom:6px;white-space:nowrap;${fb?'visibility:hidden':''}">${d.two?(q.part==='m'?'MEANING':'READING'):q.label}</div>${ja(q.q,`font-family:'Shippori Mincho B1','Noto Serif CJK JP',serif;font-weight:800;font-size:${qs}px;line-height:1.15;color:#1a1626;text-align:center;white-space:nowrap`)}${BUBBLE_TAIL}</div>${note}
 ${!typ&&fb&&!autoNext()&&!d.paused?`<div class="btn wh mc-next" data-act="mcnext" role="button" aria-label="Next question" style="position:absolute;right:16px;top:${ANSTOP-84}px;width:150px;height:60px;font-size:20px;z-index:4">Next ${icon('CHR','#2a2440',2)}</div>`:''}<div class="answers" style="position:absolute;left:0;right:0;top:${ANSTOP}px;bottom:0;background:var(--area);box-shadow:0 -3px 0 0 var(--ink);padding:12px 22px 0;display:flex;flex-direction:column;gap:10px;z-index:2">${typ?'':q.opts.map(ob).join('')}</div>
 ${d.paused?`<div style="position:absolute;inset:0;background:rgba(26,22,38,.7);z-index:30;display:flex;align-items:center;justify-content:center"><div class="panel" style="width:300px;padding:22px 22px 26px;text-align:center"><div class="px" style="font-size:26px;color:var(--h1);text-shadow:2px 2px 0 var(--h1sh)">PAUSED</div>${JL()?ja('一時停止','display:block;font-size:16px;color:var(--mut);margin-top:6px','serif'):''}<div class="btn wh" style="margin-top:22px" data-act="resume">${icon('TRI','#2a2440',2)} Resume</div><div class="btn out" data-act="quit" style="margin-top:20px;height:52px;font-size:16px">Quit duel</div></div></div>`:''}`};
 R.summary=()=>{const d=S.duel,right=d.res.filter(r=>r.correct).length,tot=d.res.length,pct=Math.round(right/tot*100),tier=pct===100?'top':pct>60?'mid':'low',win=pct>60;
@@ -1145,7 +1158,7 @@ function answer(i){const d=S.duel;if(d.phase!=='ask')return;cancelAnimationFrame
   d.res[d.i]={q,chosen,correct:ok,time:Math.min(sec,(now-d.t0)/1000),left};
   record(q.item.id,ok,DIFF[S.diff].lv);
   sfx(ok);d.phase='fb';d.tFb=performance.now();render();clearTimeout(fbTimer);if(autoNext())fbTimer=setTimeout(nextQ,1300)}
-/* v19: typed answer. Empty (after trimming) = ignored. No timer: time is only measured for the summary's average. Mastery clears are
+/* v19: typed answer. Empty (after trimming) = ignored. No timer: time is only measured for the summary's average. Mastery clears (v23: always at Hard, d.lv=3) are
    recorded at the Default difficulty (d.lv, set when the duel starts) because typed duels skip the pace screen. */
 function answerTyped(raw){const d=S.duel;if(!d||d.phase!=='ask'||!d.typing||d.paused)return false;const q=d.qs[d.i],typed=kanaOf(raw,true).trim();
   if(!normAns(typed))return false;const now=performance.now(),ok=checkTyped(q.item,typed);
@@ -1234,7 +1247,8 @@ window.addEventListener('popstate',()=>back());
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(S.theme==='system')render()});
 /* v19: on a phone, while the typed-answer field has focus and the visible height is short (= the on-screen keyboard is up), the phone is
    scaled to the full width and shifted so the question card, the field and Submit sit above the keyboard ('kbopen' layout). */
-const KB_BOTTOM=QTOP_T+190+112; /* bottom of the compact typing panel in phone px */
+const KB_UP=36; /* v24: keyboard-open layout hides the name plate and lifts card + panel by 36px so the counter stays in view */
+const KB_BOTTOM=QTOP_T+190+112-KB_UP; /* bottom of the compact typing panel in phone px */
 function fit(){const f=document.getElementById('frame'),hint=document.getElementById('hint'),vv=window.visualViewport,W=innerWidth,H=Math.min(innerHeight,vv?vv.height:innerHeight);
   const phone=(W<600)||matchMedia('(pointer:coarse)').matches&&W<900;document.body.classList.toggle('mobile',phone);
   const tin=document.getElementById('tinput'),kb=phone&&!!tin&&document.activeElement===tin&&typeof S!=='undefined'&&S.screen==='play'&&H/W<1.5;
