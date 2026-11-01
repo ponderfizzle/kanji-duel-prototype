@@ -144,10 +144,15 @@ body.mobile #hint{display:none}
 .scard-out{animation:scardout .3s ease-in forwards}
 @keyframes scardout{to{transform:translateX(-125%);opacity:.3}}
 .chal-in{animation:chalin 1s cubic-bezier(.2,.75,.25,1) both}
-.psc-card.chal-in{animation:chalin 1s cubic-bezier(.2,.75,.25,1) both,pscmerge .35s ease-out 1s both}
+.psc-card.chal-in{animation:chalin 1s cubic-bezier(.2,.75,.25,1) both,pscmerge .5s ease-in-out 1s both}
 @keyframes pscmerge{to{box-shadow:0 0 0 4px transparent}}
-.psc-dim{position:absolute;inset:0;background:#1a1626;pointer-events:none;animation:pscdim .35s ease-out 1s both}
-@keyframes pscdim{from{opacity:.72}to{opacity:0}}
+.bg.psc-old{pointer-events:none;animation:pscold .5s ease-in-out 1s both}
+@keyframes pscold{from{opacity:1}to{opacity:0}}
+/* TEMP-FORCE-CHAR (testing only, remove later) */
+.tfc{display:flex;align-items:center;gap:8px;margin:-10px 26px 8px;padding:3px 6px;background:rgba(26,22,38,.78)}
+.tfc-l{font-size:13px;line-height:1.15;color:#cfc8e0}
+.tfc-s{flex:1;min-width:120px;font:inherit;font-size:13px;color:#e8e4f0;background:#2a2440;border:1px solid #5f5a74;border-radius:2px;padding:1px 4px}
+/* end TEMP-FORCE-CHAR */
 @keyframes chalin{from{transform:translateX(115%)}to{transform:none}}
 .chal-fade{animation:chalfade .4s ease-out both}
 @keyframes chalfade{from{opacity:0}to{opacity:1}}
@@ -157,7 +162,7 @@ body.mobile #hint{display:none}
 #phone.artview #scr .bg,#phone.artview #scr .eyebtn,#phone.artview #scr .eyebtn *,#phone.artview #scr .artov{visibility:visible}
 #phone.artview #scr .eyebtn{position:relative;z-index:91}
 #phone.artview #tin{visibility:hidden}
-@media (prefers-reduced-motion: reduce){.qlab.nudge,.qcard.nudge,.scard-out,.chal-in,.psc-card,.psc-dim,.chal-fade,.taunt.chal-pop,.qline{animation:none!important}}
+@media (prefers-reduced-motion: reduce){.qlab.nudge,.qcard.nudge,.scard-out,.chal-in,.psc-card,.psc-old,.chal-fade,.taunt.chal-pop,.qline{animation:none!important}}
 body.kbopen #tin{top:278px;padding-top:0}
 body.kbopen #tin .tin-hint{display:none}
 body.kbopen #tin .tin-main{flex-direction:row;gap:16px}
@@ -1038,12 +1043,22 @@ R.study=()=>{const c=S.card,ses=!!c.list,L=ses?c.list.map(id=>ITEMS[id]):SETITEM
 <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:18px 30px">
 <div class="tap" data-act="flip" style="position:relative;width:100%;height:100%;max-height:450px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--offw);box-shadow:inset 0 0 0 2px #fff,inset 0 -6px 0 0 var(--offw3),0 -3px 0 0 #1a1626,0 3px 0 0 #1a1626,-3px 0 0 0 #1a1626,3px 0 0 0 #1a1626,0 9px 0 0 rgba(26,22,38,.45);padding:20px">
 ${c.flip?back:front}<div class="px" style="font-size:15px;color:#5f5a74;margin-top:24px">${c.flip?'TAP TO HIDE':'TAP TO REVEAL'}</div>${so?soBtn(it.k):''}</div></div>
-<div style="padding:0 26px 44px;display:flex;gap:18px"><div class="btn out ${c.i?'':'dis2'}" style="flex:1;font-size:18px" data-act="prev">${icon('CHL','currentColor',2)} Prev</div><div class="btn wh" style="flex:1.4;font-size:20px" data-act="${last?(ses?'studyQuiz':'studyDone'):'next'}">${last?(ses?'Review '+icon('TRI','#2a2440',2):'Done '+icon('CHECK','#2a2440',2)):'Next '+icon('CHR','#2a2440',2)}</div></div></div>`};
+${ses?tfcUI():''/* TEMP-FORCE-CHAR */}<div style="padding:0 26px 44px;display:flex;gap:18px"><div class="btn out ${c.i?'':'dis2'}" style="flex:1;font-size:18px" data-act="prev">${icon('CHL','currentColor',2)} Prev</div><div class="btn wh" style="flex:1.4;font-size:20px" data-act="${last?(ses?'studyQuiz':'studyDone'):'next'}">${last?(ses?'Review '+icon('TRI','#2a2440',2):'Done '+icon('CHECK','#2a2440',2)):'Next '+icon('CHR','#2a2440',2)}</div></div></div>`};
 function nameSize(en,jp){return Math.max(20,Math.min(36,Math.floor((350-(JL()?jp.length*30:0))/(en.length*0.74))))}
 const STUDY_TAUNT='Ready to see what stuck?';
+/* TEMP-FORCE-CHAR (testing only, to be removed): a drop-down on the study screen that forces the opponent of the next study quiz.
+   In memory only (no saved data). To remove: delete this block, the tfcUI() call in R.study, the tfcOpp() argument in act 'studyQuiz'
+   and the .tfc CSS in make_proto.py (all marked TEMP-FORCE-CHAR). */
+let TFC='';
+const tfcOpp=()=>(TFC&&OPP.find(o=>o[0]===TFC))||null;
+const tfcName=o=>o[1].toLowerCase().replace(/\b[a-z]/g,m=>m.toUpperCase());
+const tfcUI=()=>`<div class="tfc"><label class="tfc-l" for="tfc">TEST: force character (temporary)</label><select id="tfc" class="tfc-s"><option value="">Random (default)</option>${OPP.map(o=>`<option value="${o[0]}"${TFC===o[0]?' selected':''}>${tfcName(o)}</option>`).join('')}</select></div>`;
+document.addEventListener('change',e=>{if(e.target.id==='tfc')TFC=e.target.value});
+window.__tfc=()=>TFC;
+/* end TEMP-FORCE-CHAR */
 const CHAL_LINE={review:'a review',study:'a study quiz',practice:'a practice round'};
 R.challenge=()=>{const d=S.duel,[c,en,jp,,t0]=d.opp,P=!!PSCENE[c],fs=nameSize(en,jp),taunt=d.mode==='study'?STUDY_TAUNT:t0,n=d.items.length,tin=!!S.chalIn&&performance.now()-S.chalIn<1400&&!RM();
-  return `${chalBg(d.scene)}${P?(tin?`<div class="psc-dim" aria-hidden="true"></div><div class="a-wbg-${c} chal-in psc-card" style="position:absolute;left:27px;top:141px;width:360px;height:480px;background-size:360px 480px;image-rendering:pixelated;box-shadow:0 0 0 4px var(--ink)"></div>`:''):`<div class="a-wbg-${c}${tin?' chal-in':''}" style="position:absolute;left:26px;top:142px;width:360px;height:480px;background-size:360px 480px;image-rendering:pixelated;box-shadow:0 0 0 4px var(--ink)"></div>`}
+  return `${chalBg(d.scene)}${P?(tin?`${bg(SCENE.study).replace('class="bg ','class="bg psc-old ')}<div class="a-wbg-${c} chal-in psc-card" style="position:absolute;left:27px;top:141px;width:360px;height:480px;background-size:360px 480px;image-rendering:pixelated;box-shadow:0 0 0 4px var(--ink)"></div>`:''):`<div class="a-wbg-${c}${tin?' chal-in':''}" style="position:absolute;left:26px;top:142px;width:360px;height:480px;background-size:360px 480px;image-rendering:pixelated;box-shadow:0 0 0 4px var(--ink)"></div>`}
 <div class="layer${tin?' chal-fade':''}">${STATUS}<div class="plate chalhd" style="text-align:center;margin:20px auto 0;padding:${JL()?'4px 18px':'14px 16px'}">${JL()?ja('挑戦','display:block;font-size:54px;line-height:1.1;color:var(--title);text-shadow:4px 4px 0 var(--titleSh)','brush'):''}<div class="px" style="font-size:${JL()?14:20}px;letter-spacing:${JL()?3:2}px;color:var(--h1);font-weight:700;white-space:nowrap;${JL()?'':'text-shadow:3px 3px 0 var(--h1sh)'}">${d.mode==='practice'?'PRACTICE':'REVIEW'} CHALLENGE</div></div>
 <div style="flex:1"></div>${P?'<div class="chalblk" style="position:relative;background:var(--chrome);display:flex;flex-direction:column;box-shadow:inset 0 4px 0 0 var(--edge),0 -4px 0 0 var(--ink)">':''}<div style="position:relative;min-height:124px;padding:${P?(taunt?'14px 0 12px':'14px 0 0'):taunt?'8px 0 12px':'0'};gap:${taunt?4:6}px!important;margin-bottom:${P?0:6}px;${P?'':'background:var(--chrome);box-shadow:inset 0 4px 0 0 var(--edge),0 -4px 0 0 var(--ink),0 4px 0 0 var(--ink),0 12px 0 0 var(--shade);'}display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
 <div class="ttl" style="gap:12px"><span class="px" style="font-size:${fs}px;font-weight:700;letter-spacing:2px;color:var(--strong);text-shadow:3px 3px 0 ${Dk()?'var(--ink)':'var(--gold)'};white-space:nowrap">${en}</span>${jl(jp,`font-size:${Math.min(32,fs)}px;font-weight:700;color:var(--h1);white-space:nowrap`)}</div><div class="chline" style="font-size:16px;color:var(--mut)">is challenging you to ${CHAL_LINE[d.mode]||'a review'}</div>${taunt?`<div class="taunt serif${tin?' chal-pop':''}" style="position:relative;margin:8px 20px 0;padding:6px 12px;background:var(--offw);color:#1a1626;font-size:15px;line-height:1.3;font-weight:700;text-align:center;box-shadow:inset 0 0 0 2px #fff,inset 0 -4px 0 0 var(--offw3),0 -3px 0 0 #1a1626,0 3px 0 0 #1a1626,-3px 0 0 0 #1a1626,3px 0 0 0 #1a1626">${UTAIL}“${taunt}”</div>`:''}</div>
@@ -1262,7 +1277,7 @@ const CREDITS=()=>[
   ['Sound effects','Short tones generated in the app; no recordings.','Own work']]]];
 const credHtml=()=>CREDITS().map(([g,jp,L])=>`<div class="panel credgrp" style="margin-top:14px;padding:6px 14px 6px">${sec(g,jp)}${L.map(([n,ds,lic],i)=>`<div class="cred" style="padding:9px 2px;${i<L.length-1?'border-bottom:2px solid var(--line)':''}"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><span class="cname" style="font-size:15px;font-weight:700;color:${Dk()?'var(--gold)':'var(--ind)'}">${n}</span><span class="px clic" style="font-size:12px;color:var(--txt);white-space:nowrap;flex:none">${lic}</span></div><div style="font-size:14px;line-height:1.45;color:var(--mut);margin-top:3px">${ds}</div></div>`).join('')}</div>`).join('');
 R.about=()=>`${menuBg(true)}<div class="layer">${STATUS}${hdr('About','情報')}
-${scroll(`<div class="panel" style="margin-top:16px;padding:14px 14px 12px;text-align:center">${logo(false)}<div class="tap" data-act="ver" style="font-size:14px;color:var(--mut);margin-top:8px">Version 1.0 (prototype v32)</div></div>
+${scroll(`<div class="panel" style="margin-top:16px;padding:14px 14px 12px;text-align:center">${logo(false)}<div class="tap" data-act="ver" style="font-size:14px;color:var(--mut);margin-top:8px">Version 1.0 (prototype v33)</div></div>
 ${credHtml()}<div style="height:24px"></div>`,'padding:4px 18px 0')}</div>`;
 R.dev=()=>{const t=clockNow(),dt=new Date(t),off=SR.clock||0;
   const b=(l,a)=>`<div class="btn out" style="flex:1;height:48px;font-size:15px" data-act="${a}">${l}</div>`;
@@ -1461,7 +1476,7 @@ function act(a){const [k,v]=a.split(/:(.*)/s);const d=S.duel;if(S.art&&k!=='art'
   /* v25: Review = the due queue; Study = new items up to the daily limit (cards first, then a quiz) */
   case 'review':{const L=dueList();if(!L.length){const nd=nextDue();toast(nd<Infinity?`Nothing due · next in ${fmtIn(nd-clockNow())}`:'Nothing to review yet · Study first');break}newDuel(null,'review',L);go('challenge');break}
   case 'study':{const L=newItems().slice(0,Math.min(STUDY_BATCH,newLeft()));if(!L.length){toast(newItems().length?'Daily limit reached · back after 4:00 AM':'All items learned');break}S.card={list:L.map(x=>x.id),i:0,flip:false,seen:new Set()};go('study');break}
-  case 'studyQuiz':{const c=S.card;if(S.trans)break;markSeen();if(!c.list||c.seen.size<c.list.length){toast('Look at every card first');break}newDuel(null,'study',c.list.map(id=>ITEMS[id]));
+  case 'studyQuiz':{const c=S.card;if(S.trans)break;markSeen();if(!c.list||c.seen.size<c.list.length){toast('Look at every card first');break}newDuel(tfcOpp()/* TEMP-FORCE-CHAR */,'study',c.list.map(id=>ITEMS[id]));
     /* v29: the card slides out to the left, then the challenge opens with the character sliding in from the right (no motion if reduced) */
     const card=document.querySelector('#scr [data-act="flip"]');if(RM()||!card){S.chalIn=0;go('challenge');break}
     card.classList.add('scard-out');S.trans=true;const tk=S.transTok=(S.transTok||0)+1;setTimeout(()=>{if(S.transTok!==tk||!S.trans||S.screen!=='study')return;S.trans=false;S.chalIn=performance.now();go('challenge')},300);break}
