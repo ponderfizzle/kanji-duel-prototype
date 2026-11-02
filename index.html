@@ -1277,7 +1277,7 @@ const CREDITS=()=>[
   ['Sound effects','Short tones generated in the app; no recordings.','Own work']]]];
 const credHtml=()=>CREDITS().map(([g,jp,L])=>`<div class="panel credgrp" style="margin-top:14px;padding:6px 14px 6px">${sec(g,jp)}${L.map(([n,ds,lic],i)=>`<div class="cred" style="padding:9px 2px;${i<L.length-1?'border-bottom:2px solid var(--line)':''}"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><span class="cname" style="font-size:15px;font-weight:700;color:${Dk()?'var(--gold)':'var(--ind)'}">${n}</span><span class="px clic" style="font-size:12px;color:var(--txt);white-space:nowrap;flex:none">${lic}</span></div><div style="font-size:14px;line-height:1.45;color:var(--mut);margin-top:3px">${ds}</div></div>`).join('')}</div>`).join('');
 R.about=()=>`${menuBg(true)}<div class="layer">${STATUS}${hdr('About','情報')}
-${scroll(`<div class="panel" style="margin-top:16px;padding:14px 14px 12px;text-align:center">${logo(false)}<div class="tap" data-act="ver" style="font-size:14px;color:var(--mut);margin-top:8px">Version 1.0 (prototype v33)</div></div>
+${scroll(`<div class="panel" style="margin-top:16px;padding:14px 14px 12px;text-align:center">${logo(false)}<div class="tap" data-act="ver" style="font-size:14px;color:var(--mut);margin-top:8px">Version 1.0 (prototype v34)</div></div>
 ${credHtml()}<div style="height:24px"></div>`,'padding:4px 18px 0')}</div>`;
 R.dev=()=>{const t=clockNow(),dt=new Date(t),off=SR.clock||0;
   const b=(l,a)=>`<div class="btn out" style="flex:1;height:48px;font-size:15px" data-act="${a}">${l}</div>`;
@@ -1347,11 +1347,14 @@ const BG_ONLY={maid_cafe:['cafe_maid','student_girl']};
 const PSCENE={cafe_maid:1};
 /* v31: menu screens use the duel scenes (not the restricted ones): one picked at random per launch (memory only), the reload button
    moves to the next one not yet seen this session (reshuffled when all were seen; never the current one twice in a row) */
-const MENU_POOL=Object.keys(BG).filter(k=>BG[k].duel&&!BG_ONLY[k]);
+/* v34 (user t263u): the classic day/night scenes (pre-v31 menu art, incl. the start screen's fuji_torii) are back in the menu pool as 'dn:<scene>';
+   the day or night version is chosen at render time from the current light/dark mode. Restricted scenes (maid_cafe) stay out. */
+const MENU_DN=['fuji_torii','koi_bridge','festival','pagoda_lake','sunset_torii','bamboo','dojo','snow_temple','funaya'];
+const MENU_POOL=[...MENU_DN.map(k=>'dn:'+k),...Object.keys(BG).filter(k=>BG[k].duel&&!BG_ONLY[k])];
 const MENU={order:shuffle(MENU_POOL),i:0};
 const menuCur=()=>MENU.order[MENU.i];
 function menuNext(){const cur=menuCur();MENU.i++;if(MENU.i>=MENU.order.length){let o;do{o=shuffle(MENU_POOL)}while(o.length>1&&o[0]===cur);MENU.order=o;MENU.i=0}}
-function menuBg(dim=false){const sc=menuCur();return `<div class="bg mbg a-duel-${sc}" data-scene="${sc}" style="${dim&&Dk()?'filter:brightness(.8);':''}"></div>`}
+function menuBg(dim=false){const sc=menuCur(),cls=sc.startsWith('dn:')?`a-bg-${Dk()?'night':'day'}-${sc.slice(3)}`:`a-duel-${sc}`;return `<div class="bg mbg ${cls}" data-scene="${sc}" style="${dim&&Dk()?'filter:brightness(.8);':''}"></div>`}
 const OPP_BG={
   // traditional roles: traditional scenes + the matsuri; never the purely modern streets (akihabara / residential / platform)
   samurai:          {p:[...TRAD,...KYOTO,'night_temple_garden','tea_house','castle_throne_hall','riverbank_sakura'], s:['yatai_street','festival_street']},
