@@ -659,7 +659,7 @@ body.kbl #phone .kbly .tap{pointer-events:auto}
 .kbl-pop{animation:kblpop .22s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes kblpop{from{opacity:0;transform:scale(.5) translateX(12px)}to{opacity:1;transform:none}}
 /* the unified card = the #tin panel restyled */
-body.kbl #phone #tin.gcu{top:auto;left:10px;right:10px;bottom:var(--kbb,250px);zoom:var(--u,1);padding:0;gap:0;border-radius:22px;background:linear-gradient(180deg,var(--gc-card),var(--gc-card2));box-shadow:0 14px 34px rgba(0,0,0,.5);overflow:hidden}
+body.kbl #phone #tin.gcu{top:auto;left:10px;right:10px;bottom:var(--kbb,14px);transition:bottom .45s cubic-bezier(.4,0,.2,1);zoom:var(--u,1);padding:0;gap:0;border-radius:22px;background:linear-gradient(180deg,var(--gc-card),var(--gc-card2));box-shadow:0 14px 34px rgba(0,0,0,.5);overflow:hidden}
 body.kbl #phone #tin.gcu.nudge{animation:tshake .32s}
 .tin-q{display:none}
 body.kbl #phone #tin.gcu .tin-q{display:block;order:0;padding:10px 16px 0}
@@ -691,9 +691,11 @@ body.kbl #phone #tin.gcu .tin-ph{font-size:17px}
 body.kbl #phone #tin.gcu .tin-mark{right:10px}
 body.kbl #phone #tin.gcu .tin-idk,body.kbl #phone #tin.gcu .tin-ovr,body.kbl #phone #tin.gcu .tin-sub{height:46px!important;border-radius:14px!important;font-size:16px!important;font-weight:800!important;box-shadow:none!important}
 body.kbl #phone #tin.gcu .tin-sub{flex:1 1 0}
-body.kbl #phone #tin.gcu .tin-idk{flex:.72 1 0;font-size:14px!important;background:rgba(255,255,255,.13)!important;color:#F5E9EC!important}
-body.kbl #phone #tin.gcu .tin-ovr{flex:.85 1 0;font-size:14px!important}
+body.kbl #phone #tin.gcu .tin-idk{flex:.8 1 0;font-size:14px!important;background:rgba(255,255,255,.13)!important;color:#F5E9EC!important}
+body.kbl #phone #tin.gcu .tin-ovr{flex:.8 1 0;font-size:14px!important}
 body.kbl #phone #tin.gcu .gn{flex:0 0 0!important;margin-right:-9px}
+/* v53: after judging, the left slot stays (empty) unless gold I knew it fills it, so Next sits exactly where Submit was */
+body.kbl #phone #tin.gcu .tin-idk.gn.hold{flex:.8 1 0!important;margin-right:0;padding:0 8px!important;visibility:hidden}
 @media (prefers-reduced-motion: reduce){.kbl-pop,body.kbl #phone #tin.gcu.nudge,.tin-ql.nudge{animation:none!important}.tin-qw,.kbbg,.kbly{transition:none!important}}
 
 /* v44 BUTTON THEME */
@@ -1800,7 +1802,7 @@ function tinDisp0(){const t=document.getElementById('tin');if(!t)return;const el
 const NU_PH={m:'Type the English meaning',rk:'On or kun reading (kana or romaji)',rv:'Reading in kana (romaji ok)'};
 function tinPh(def){const t=document.getElementById('tin'),d=S.duel;if(!t||!t.classList.contains('gcu')||!d||!d.qs)return def;if(document.body.classList.contains('kbl'))return 'Type your answer';const q=d.qs[d.i];return mStep()?NU_PH.m:q.item.t==='v'?NU_PH.rv:NU_PH.rk}
 function tinRender(){const d=S.duel,show=S.screen==='play'&&d&&d.typing&&!S.modal&&!d.paused,t=show?tinEl():document.getElementById('tin');if(!t)return;
-  if(!show){const el=t.querySelector('input');if(document.activeElement===el)el.blur();t.style.display='none';document.body.classList.remove('kbopen');return}
+  if(!show){const el=t.querySelector('input');if(document.activeElement===el)el.blur();t.style.display='none';document.body.classList.remove('kbopen');if(typeof kblSync==='function')kblSync();return}
   t.style.display='';const q=d.qs[d.i],fb=d.phase==='fb',r=d.res[d.i];
   if(d.two)return tinRender2(t,d,q,fb,r);t.className='';t.querySelector('.tin-ovr').classList.remove('on');t.querySelector('.tin-sub').textContent='Submit';
   t.querySelector('.tin-hint').textContent=q.item.t==='v'?"Type the word's reading":'Type any reading (kun or on)';
@@ -3119,7 +3121,7 @@ const CREDITS=()=>[
   ['Sound effects','Short tones generated in the app; no recordings.','Own work']]]];
 const credHtml=()=>CREDITS().map(([g,jp,L])=>`<div class="panel credgrp" style="margin-top:14px;padding:6px 14px 6px">${sec(g,jp)}${L.map(([n,ds,lic],i)=>`<div class="cred" style="padding:9px 2px;${i<L.length-1?'border-bottom:2px solid var(--line)':''}"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><span class="cname" style="font-size:15px;font-weight:700;color:${Dk()?'var(--gold)':'var(--ind)'}">${n}</span><span class="px clic" style="font-size:12px;color:var(--txt);white-space:nowrap;flex:none">${lic}</span></div><div style="font-size:14px;line-height:1.45;color:var(--mut);margin-top:3px">${ds}</div></div>`).join('')}</div>`).join('');
 R.about=()=>`${menuBg(true)}<div class="layer">${STATUS}${hdr('About','情報')}
-${scroll(`<div class="panel" style="margin-top:16px;padding:14px 14px 12px;text-align:center">${logo(false)}<div class="tap" data-act="ver" style="font-size:14px;color:var(--mut);margin-top:8px">Version 1.0 (prototype v52)</div></div>
+${scroll(`<div class="panel" style="margin-top:16px;padding:14px 14px 12px;text-align:center">${logo(false)}<div class="tap" data-act="ver" style="font-size:14px;color:var(--mut);margin-top:8px">Version 1.0 (prototype v53)</div></div>
 ${credHtml()}<div style="height:24px"></div>`,'padding:4px 18px 0')}</div>`;
 R.dev=()=>{const t=clockNow(),dt=new Date(t),off=SR.clock||0;
   const b=(l,a)=>`<div class="btn out" style="flex:1;height:48px;font-size:15px" data-act="${a}">${l}</div>`;
@@ -3484,10 +3486,10 @@ function fit(){const f=document.getElementById('frame'),hint=document.getElement
      this width (a rotation resets it). v19-v37 used height/width < 1.5, which also fired on tablets, foldables and landscape phones with no keyboard. */
   if(fit.w!==W){fit.w=W;fit.h=H}else fit.h=Math.max(fit.h,H);
   const tin=document.getElementById('tinput'),kb=phone&&!!tin&&document.activeElement===tin&&typeof S!=='undefined'&&S.screen==='play'&&H<fit.h*0.8;
-  /* v52 (notes/DUEL_SCREEN_LAYOUT.md): new interface + two-question duel + keyboard up = the 'kbl' layout: phone pinned to the top of the
-     visible area at full width; furniture, cameo and the unified card are laid out in the reference mock's px, zoomed by --u to fit */
-  const kbl=kb&&typeof NU==='function'&&NU()&&!!S.duel&&!!S.duel.two,kbl0=document.body.classList.contains('kbl');
-  document.body.classList.toggle('kbopen',kb);document.body.classList.toggle('kbl',kbl);
+  /* v52/v53 (notes/DUEL_SCREEN_LAYOUT.md): in the new interface's two-question duel the Layout 3 duel ('kbl', kblSync in nu_app.js)
+     applies at all times; with the keyboard up the phone is pinned to the top of the visible area at full width */
+  const kbl=kb&&typeof NU==='function'&&NU()&&!!S.duel&&!!S.duel.two;
+  document.body.classList.toggle('kbopen',kb);
   const tp=document.getElementById('tin'),kbB=kb&&tp&&typeof S!=='undefined'&&S.duel&&S.duel.two?tinEndBottom(tp):KB_BOTTOM;
   /* v38: the phone fits inside the safe area (notch, status bar, gesture bar: env(safe-area-inset-*), read from #sa); zero in a normal browser tab.
      With the keyboard up only the side insets apply (the keyboard covers the bottom; the layout already moves the top off screen). */
@@ -3502,8 +3504,7 @@ function fit(){const f=document.getElementById('frame'),hint=document.getElement
   const ch=window.__frameScale!==s;window.__frameScale=s;f.style.transform=`scale(${s})`;f.style.left=Math.round(sL+(Ws-fw*s)/2)+'px';
   f.style.top=Math.round(kb?(vv?vv.offsetTop:0)-(kbl?0:Math.max(0,kbB+8-H/s)*s):phone?sT+(Hs-fh*s)/2:sT+Math.max(8,(Hs-28-fh*s)/2))+'px';
   hint.style.top=Math.round(phone?H:(parseFloat(f.style.top)+fh*s+8))+'px';
-  if(kbl){const pe=document.getElementById('phone'),vis=H/s,u=Math.min(fw/290,vis/412);pe.style.setProperty('--u',u.toFixed(4));pe.style.setProperty('--kbb',((PH-vis)/u+12).toFixed(1)+'px')}
-  if(kbl!==kbl0&&typeof kblEase==='function')kblEase();
+  window.__fitG={H,s,PH,kb,phone,W};try{kblSync()}catch(e){}
   if(ch&&typeof S!=='undefined'&&S.screen==='play')render()}
 addEventListener('resize',fit);window.visualViewport&&visualViewport.addEventListener('resize',fit);fit();
 // v18: re-render when the device pixel ratio changes (zoom, moving to another screen) so the pause glyph re-snaps
@@ -3574,22 +3575,30 @@ function nuCam(c){const P=PSCENE[c];if(!P)return `class="kbl-cam a-wbg-${c}" sty
 const NU_WATCH='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13.5" r="8"/><path d="M12 9.5v4l2.5 2M9.5 2.5h5M12 2.5v3"/></svg>';
 function nuKbl(d,q,fb,r,lim,el,over){const ok=fb&&r&&r.correct,done=d.i+(fb?1:0),pct=Math.round(100*done/Math.max(1,d.qs.length));
   const off=(283*Math.min(1,el/lim)).toFixed(1),ring=fb?(ok?'#2f9e5f':'#d2453e'):over?'#d2453e':'var(--gc-accent)',pop=fb?nuAnim(d.fbAt,0,220,'kbl-pop'):'';
-  return `<div class="kbly"><div class="kbl-tl"><div class="kbl-end tap" data-act="askQuit" role="button" aria-label="End">END</div>
+  return `<div class="kbly${nuAnim(d.accAt,150,300,'nu-fadein')}"><div class="kbl-tl"><div class="kbl-end tap" data-act="askQuit" role="button" aria-label="End">END</div>
 <div class="kbl-sec${over&&!fb?' over':''}${fb?(ok?' g':' b'):''}" aria-label="Seconds left">${NU_WATCH}<span id="kbsecv">${over?'OVERTIME':Math.ceil(lim-el)}</span></div></div>
 <div class="kbl-prog" role="img" aria-label="Item ${q.no} of ${d.items.length}, ${pct}% of the review done"><span><b>${q.no}</b>/${d.items.length}</span><i><b style="width:${pct}%"></b></i></div>
 <div ${nuCam(d.opp[0])} aria-hidden="true"><svg class="kbl-ring" viewBox="0 0 96 96"><circle class="tr" cx="48" cy="48" r="45"/><circle id="kbring" class="pr" cx="48" cy="48" r="45" style="stroke:${ring};stroke-dashoffset:${off}"/></svg></div>
 ${fb?`<div class="kbl-pill ${ok?'ok':'bad'}${pop}">${ok?NU_TICK:NU_CROSS}<span>${ok?'CORRECT':'INCORRECT'}</span></div>`:''}</div>`}
 /* accepted answers as chips (readings grouped On / Kun) for the unified card's feedback block */
 function nuChips(q,k,ok){const it=q.item,mk=`<span class="nu-mk ${ok?'g':'b'}">${ok?NU_TICK:NU_CROSS}</span>`,ch=L=>`<span class="chips">${L.map(x=>`<span class="chip-r">${ja(escH(x))}</span>`).join('')}</span>`;
-  if(k==='m'){const L=meaningList(it);return `<div class="gfb-d">${mk}ACCEPTED MEANING${L.length>1?'S':''}</div><div class="gfb-m">${escH(L.join(' · '))}</div>`}
+  if(k==='m'){const L=meaningList(it);return `<div class="gfb-d">${mk}ACCEPTED MEANING${L.length>1?'S':''}</div><div class="arow">${ch(L)}</div>`}
   if(it.t==='v'){const L=ACCEPT.vocab[it.k]||[it.r];return `<div class="gfb-d">${mk}ACCEPTED READING${L.length>1?'S':''}</div><div class="arow">${ch(L)}</div>`}
   const e=ACCEPT.kanji[it.k];if(!e)return `<div class="gfb-d">${mk}ACCEPTED READING</div><div class="gfb-m">${rd(q.answer)}</div>`;
   const on=(e.on||[]).map(nuHira2Kata),kun=e.kun||[];
   return `<div class="gfb-d">${mk}ACCEPTED READING${on.length+kun.length>1?'S':''}</div>${on.length?`<div class="arow"><span class="gl">On</span>${ch(on)}</div>`:''}${kun.length?`<div class="arow"><span class="gl">Kun</span>${ch(kun)}</div>`:''}`}
-/* opening or closing the keyboard: the card eases in (no snap); the layers crossfade in CSS */
-function kblEase(){const t=document.getElementById('tin'),fr=document.getElementById('frame');try{tinDisp()}catch(e){}if(!t||t.style.display==='none'||RM()||!t.animate)return;
-  t.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:450,easing:'cubic-bezier(.4,0,.2,1)'});
-  if(fr){fr.classList.add('kbglide');clearTimeout(kblEase.h);kblEase.h=setTimeout(()=>fr.classList.remove('kbglide'),700)}}
+/* v53 (Derek 2026-11-06): the Layout 3 duel applies at all times, keyboard open or closed. The keyboard changes only the card's bottom
+   anchor: screen bottom + 14 (mock px) when closed, keyboard top + 12 when open. The zoom --u is the same in both positions: sized so the
+   worst case (生 feedback) fits above the keyboard, using the keyboard-up visible height measured on this device (kd.kbVis, per width);
+   until the keyboard has been seen, half the screen. Without a touch keyboard (desktop) the whole phone is the reference (290x650). */
+function kblSync(){const d=S.duel,t=document.getElementById('tin'),b=document.body,g=window.__fitG;
+  const on=NU()&&!!d&&!!d.two&&S.screen==='play';b.classList.toggle('kbl',on);if(!on||!g)return;
+  const pe=document.getElementById('phone'),vis=g.H/g.s;let ref;
+  if(g.phone){let M={};try{M=JSON.parse(localStorage.getItem('kd.kbVis')||'{}')}catch(e){}
+    if(g.kb){ref=Math.round(vis);if(M[g.W]!==ref){M[g.W]=ref;try{localStorage.setItem('kd.kbVis',JSON.stringify(M))}catch(e){}}}else ref=M[g.W]||Math.round(g.PH*0.5);
+    ref=ref/412}else ref=g.PH/650;
+  const u=Math.min(412/290,ref),bb=g.kb?(g.PH-vis)/u+12:14;
+  pe.style.setProperty('--u',u.toFixed(4));pe.style.setProperty('--kbb',bb.toFixed(1)+'px')}
 function nuQline(){const d=S.duel,L=d&&d.line;if(!L||performance.now()-L.at>=QLINE_MS)return '';return `<div class="qline nu-ql${performance.now()-L.at<200?'':' still'}" aria-hidden="true">${L.t}</div>`}
 
 /* ---------- feedback bubble (§10): only the accepted answers ---------- */
@@ -3610,13 +3619,14 @@ function nuTin(t,d,q,fb,r){const k=q.part||'r',p=nuPal(d.scene),el=t.querySelect
   let tq=t.querySelector('.tin-q');if(!tq){tq=document.createElement('div');tq.className='tin-q';tq.innerHTML='<div class="tin-ql"></div><div class="tin-qw"></div>';t.insertBefore(tq,t.firstChild)}
   const nud=!fb&&d.nud&&d.nud[d.i],nr=performance.now()-(d.nudgeAt||0),ql=tq.querySelector('.tin-ql'),qw=tq.querySelector('.tin-qw'),qn=Array.from(q.q).length;
   ql.className='tin-ql'+(nud?' nudged'+(nr<1300?' nudge':''):'');ql.textContent=k==='m'?'MEANING':'READING';if(nud&&nr<330)t.classList.add('nudge');
+  kblSync();
   qw.style.setProperty('--qf',(qn<=3?40:qn<=5?34:qn<=7?30:26)+'px');if(qw.dataset.w!==q.q){qw.dataset.w=q.q;qw.innerHTML=ja(escH(q.q))}
   el.maxLength=!fb&&k==='m'?40:24;
   const ok=fb&&r&&r.correct;t.querySelector('.tin-box').className='tin-box'+(fb?(ok?' good':' bad'):'');
   t.querySelector('.tin-mark').innerHTML=fb?`<span class="nu-mk ${ok?'g':'b'}">${ok?NU_TICK:NU_CROSS}</span>`:'';
   const sub=t.querySelector('.tin-sub');sub.textContent=fb?'Next ▶':'Submit';sub.setAttribute('aria-label',fb?'Next question':'Submit answer');
   t.querySelector('.tin-idk').classList.toggle('gn',!!fb);
-  t.querySelector('.tin-ovr').classList.toggle('gn',!(fb&&r&&r.part==='m'&&!r.correct));
+  t.querySelector('.tin-ovr').classList.toggle('gn',!(fb&&r&&r.part==='m'&&!r.correct));t.querySelector('.tin-idk').classList.toggle('hold',!!fb&&!(r&&r.part==='m'&&!r.correct));
   /* v50 (user 2026-11-05): after "I don't know" the "I knew it" button stays, disabled */
   const ov=t.querySelector('.tin-ovr'),ovd=!!(fb&&r&&r.idk);ov.classList.toggle('off',ovd);if(ovd)ov.setAttribute('aria-disabled','true');else ov.removeAttribute('aria-disabled');
   const ex=t.querySelector('.tin-exp');let b=ex.querySelector('.gfb');if(!b){ex.innerHTML='<div class="gfb"></div>';b=ex.querySelector('.gfb')}
