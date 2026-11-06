@@ -701,11 +701,11 @@ body.kbl #phone #tin.gcu .tin-idk.gn.hold{flex:.8 1 0!important;margin-right:0;p
 /* ===== v54 start (title) screen, new interface (notes/START_SCREEN.md). Mock px (290 wide) x1.42 for the 412 px phone ===== */
 .gst-scrim{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,color-mix(in srgb,var(--gc-deep) 90%,transparent) 0%,color-mix(in srgb,var(--gc-deep) 60%,transparent) 26%,transparent 52%,color-mix(in srgb,var(--gc-deep) 70%,transparent) 82%,color-mix(in srgb,var(--gc-deep) 90%,transparent) 100%)}
 .gst{display:flex;flex-direction:column}
-.gst-card{margin:6px 26px 0;padding:31px 26px 28px;border-radius:34px;text-align:center;background:linear-gradient(160deg,var(--gc-card),var(--gc-card2));box-shadow:0 14px 31px rgba(0,0,0,.35)}
-.gst-kick{font-size:15.5px;font-weight:800;letter-spacing:.34em;text-indent:.34em;color:var(--gc-accent);margin-bottom:14px}
-.gst-kanji{font-family:'Shippori Mincho B1','Noto Serif CJK JP',serif;font-size:74px;font-weight:800;line-height:1.15;color:#F7EFDB;text-shadow:0 3px 14px rgba(0,0,0,.35)}
-.gst-en{font-size:27px;font-weight:800;letter-spacing:.42em;text-indent:.42em;color:#fff;margin-top:11px}
-.gst-sub{font-size:17px;color:rgba(255,255,255,.82);margin-top:14px}
+.gst-card{margin:6px 26px 0;padding:20px 22px 19px;border-radius:28px;text-align:center;background:linear-gradient(160deg,var(--gc-card),var(--gc-card2));box-shadow:0 14px 31px rgba(0,0,0,.35)}
+/* v54c (Derek 2026-11-06): no BEGINNER - EXPERT range line (v54b had tinted it); the card is smaller */
+.gst-kanji{font-family:'Shippori Mincho B1','Noto Serif CJK JP',serif;font-size:58px;font-weight:800;line-height:1.15;color:#F7EFDB;text-shadow:0 3px 14px rgba(0,0,0,.35)}
+.gst-en{font-size:22px;font-weight:800;letter-spacing:.42em;text-indent:.42em;color:#fff;margin-top:8px}
+.gst-sub{font-size:15.5px;color:rgba(255,255,255,.82);margin-top:10px}
 .gst-sp{flex:1}
 .gst-btn{position:relative;margin:0 26px 26px;padding:27px 0;border-radius:28px;background:var(--gc-accent);color:var(--gc-deep);box-shadow:0 14px 31px rgba(0,0,0,.35);user-select:none}
 .gst-sym{position:absolute;left:34px;top:50%;transform:translateY(-50%);font-size:27px;line-height:1;font-family:'Noto Sans Symbols 2','Segoe UI Symbol','Apple Symbols',sans-serif}
@@ -3849,7 +3849,7 @@ const _Rtitle=R.title;
 R.title=()=>NU()?nuTitle():_Rtitle();
 function nuTitle(){const [deep,card,card2,acc]=gcPal(),v=`--gc-deep:${deep};--gc-card:${card};--gc-card2:${card2};--gc-accent:${acc}`;
   return `${menuBg()}<div class="gst-scrim" style="${v}"></div><div class="layer nu gst" data-gc="${gcKey()}" style="${v}">${STATUS}
-<div class="gst-card"><div class="gst-kick">BEGINNER – EXPERT</div><div class="gst-kanji" lang="ja">漢字決闘</div><div class="gst-en">KANJI DUEL</div><div class="gst-sub">Study Japanese kanji and vocabulary</div></div>
+<div class="gst-card"><div class="gst-kanji" lang="ja">漢字決闘</div><div class="gst-en">KANJI DUEL</div><div class="gst-sub">Study Japanese kanji and vocabulary</div></div>
 <div class="gst-sp"></div>
 <div class="gst-btn tap" data-act="go:home" role="button" aria-label="Tap to start"><span class="gst-sym" aria-hidden="true">➤</span><span class="gst-txt">TAP TO START</span></div></div>`}
 </script></body></html>
