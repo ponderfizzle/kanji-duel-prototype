@@ -722,6 +722,65 @@ body.kbl #phone #tin.gcu .tin-idk.gn.hold{flex:.8 1 0!important;margin-right:0;p
 #phone.theme-dark:not(.nuskin) #scr .stc{box-shadow:inset 0 0 0 2px rgba(255,255,255,.13),inset 0 -6px 0 0 #171221,0 -3px 0 0 #1a1626,0 3px 0 0 #1a1626,-3px 0 0 0 #1a1626,3px 0 0 0 #1a1626,0 9px 0 0 rgba(26,22,38,.45)!important}
 #phone.nuskin.theme-dark #scr .stc{box-shadow:inset 0 0 0 2px rgba(255,255,255,.13),0 16px 30px rgba(0,0,0,.4)!important}
 
+/* v56 KANA FOUNDATIONS (prototype/kana.css) */
+/* v56 KANA FOUNDATIONS (Derek 2026-11-07, notes/KANA_FOUNDATIONS.md rev. 5). New screens reuse the new-interface tokens and pieces
+   (--gc-*, nuPage scrim, .ns-seg, .nsgr/.nsc, .nm-card, .nu-btn); the only new furniture is the list rows, tick boxes, banner and brain. */
+.np .kbar{flex:none;position:relative;padding:10px 16px 30px;display:flex;flex-direction:column;align-items:stretch;gap:10px}
+.np .kbar .nu-btn{flex:none}
+.np .kbar .nu-btn.dis{opacity:.45;pointer-events:none}
+/* Before you begin */
+.kst-step{font-size:12px;font-weight:800;letter-spacing:.18em;color:rgba(255,255,255,.7);margin:6px 2px 6px}
+.kst-t{font-size:30px;font-weight:850;line-height:1.15;margin:0 2px 8px}
+.kst-p{font-size:16px;line-height:1.5;color:rgba(255,255,255,.8);margin:0 2px 14px}
+.kst-card{border-radius:26px;padding:18px 18px 16px;margin-bottom:14px;background:linear-gradient(155deg,var(--gc-card),var(--gc-card2));box-shadow:0 14px 26px rgba(0,0,0,.35)}
+.kst-h{display:flex;align-items:center;gap:14px}
+.kst-g{font-family:'Shippori Mincho B1',serif;font-size:52px;line-height:1;width:64px;text-align:center;font-weight:800}
+.kst-n{font-size:22px;font-weight:850}
+.kst-s{font-size:16px;color:rgba(255,255,255,.75);letter-spacing:.12em;margin-top:3px}
+.np .ns-seg.kseg{margin:14px 0 0}
+.np .ns-seg.kseg>div{padding:10px 4px;font-size:14px;white-space:nowrap}
+.kst-note{font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.85);background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:12px 14px}
+.kst-note b{color:#fff}
+.kdots{display:flex;justify-content:center;gap:8px}
+.kdots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25)}
+.kdots i.on{background:var(--gc-accent)}
+/* first-login long list (spacious: tall rows, big glyphs and tick boxes, air between row groups) */
+.kml-sc{font-size:24px;font-weight:850;margin:14px 2px 2px}
+.kml-gh{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;font-weight:900;letter-spacing:.12em;color:rgba(255,255,255,.65);margin:22px 2px 4px}
+.kml-all{letter-spacing:.02em;color:var(--gc-accent);font-size:13px;min-height:36px;min-width:64px;display:flex;align-items:center;justify-content:flex-end;padding:0 2px}
+.kml-r,.kn-r{display:flex;align-items:center;gap:14px;padding:10px 4px;min-height:64px;border-bottom:1px solid rgba(255,255,255,.13)}
+.kml-g{font-family:'Shippori Mincho B1','Noto Serif CJK JP',serif;font-size:32px;font-weight:800;width:56px;text-align:center;line-height:1.15}
+.kml-m{flex:1;min-width:0}.kml-m b{font-size:19px}
+.kchk{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;position:relative;color:transparent}
+.kchk::before{content:'';position:absolute;left:5px;top:5px;width:30px;height:30px;border-radius:9px;border:2px solid rgba(255,255,255,.5);box-sizing:border-box}
+.kchk svg{position:relative;width:20px;height:20px;margin:-4px 0 0 -4px}
+.kchk.on{color:var(--gc-deep)}.kchk.on::before{background:var(--gc-accent);border-color:var(--gc-accent)}
+/* dialog body (brain + text) inside the app's modal */
+.kdlg{text-align:left}.kdlg p{margin:0}
+.kdlg .kdlg-ic{display:flex;margin:0 auto 12px;width:46px;height:46px}
+/* Mark Known Items / pack page rows */
+.kn-note{font-size:14px;line-height:1.45;color:rgba(255,255,255,.75);margin:4px 2px 2px}
+.kn-list{padding:0 2px 14px}
+.kn-r{min-height:58px;padding:8px 2px}
+.kn-g{font-family:'Shippori Mincho B1','Noto Serif CJK JP',serif;font-size:28px;font-weight:800;min-width:48px;text-align:center;line-height:1.15;flex:none;white-space:nowrap}
+.kn-g.w{font-size:20px;min-width:64px}
+.kn-m{flex:1;min-width:0}.kn-m b{font-size:16px;display:block}.kn-m span{font-size:13px;color:rgba(255,255,255,.65)}.kn-m i{font-style:normal;color:var(--gc-accent);font-weight:700}
+.kn-card{padding:6px 16px}
+.kn-sh{font-size:12px;font-weight:900;letter-spacing:.12em;color:rgba(255,255,255,.65);margin:14px 0 2px}
+.kn-st{font-size:12px;font-weight:800;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.25);white-space:nowrap}
+.kn-st.kn{background:var(--gc-accent);color:var(--gc-deep)}
+.kn-win{border:1px solid var(--gc-accent);background:color-mix(in srgb,var(--gc-deep) 55%,transparent)!important}
+.kn-win .nu-btn{margin-top:12px;height:48px;font-size:16px}
+/* Study card: brain = a Home round button (accent circle, dark icon), top-left across from the stroke-order pill */
+.stbrain{position:absolute;top:10px;left:12px;z-index:2;background:var(--gc-accent,var(--gold));color:var(--gc-deep,#1a1626)}
+.stbrain svg,.kdlg .kdlg-ic svg{width:30px!important;height:30px!important;stroke-width:2.1}
+/* Home: the kana banner, in the scene space directly above the clock / streak row (scene card2, accent edge, two lines) */
+.gc-kana{display:flex;align-items:center;gap:13px;margin:0 22px 12px;padding:10px 15px;border-radius:16px;background:var(--gc-card2);border:1px solid var(--gc-accent);box-shadow:0 6px 14px rgba(0,0,0,.25);color:#fff;flex:none}
+.gck-g{font-family:'Shippori Mincho B1',serif;font-size:28px;line-height:1;color:var(--gc-accent);font-weight:800}
+.gck-t{min-width:0}
+.gck-1{font-size:13.5px;font-weight:800;line-height:1.3;white-space:nowrap}
+.gck-2{font-size:13px;color:rgba(255,255,255,.78);line-height:1.3}
+
 /* v44 BUTTON THEME */
 /* Button theme system v44 - generated by tools/btntheme/make_btn_theme.py from notes/BUTTON_THEME_IMPLEMENTATION.md */
 .kd-btn { font-family:'Press Start 2P', monospace; cursor:pointer; color:var(--kd-ink);
@@ -1655,7 +1714,7 @@ const N5TOTAL=Object.values(SETITEMS).reduce((a,L)=>a+L.length,0);
 const HR=3600e3,DAY=24*HR;
 const GAP=[10*60e3,HR,6*HR,DAY,3*DAY,7*DAY,21*DAY,60*DAY,120*DAY];
 const MASTERED=10;
-const TLIM={k:60,v:90}; /* seconds per question: kanji / vocab */
+const TLIM={k:60,v:90}; /* v56: kana (n) 30 s, set in kana_app.js */ /* seconds per question: kanji / vocab */
 const SRS_KEY='kd-srs-v1';
 const blankP=()=>({st:0,due:0,last:0,learned:0,lapses:0,r:{ok:0,n:0},m:{ok:0,n:0}});
 const freshSR=()=>({v:1,P:{},lessons:[],mistakes:[],daily:{day:'',n:0},clock:0,wins:0});
@@ -1674,19 +1733,22 @@ const newReady=()=>Math.min(newLeft(),newItems().length);
 const isDue=(id,t=clockNow())=>{const p=SR.P[id];return !!p&&p.st>=1&&p.st<MASTERED&&p.due<=t};
 const ownedItems=()=>[...S.owned].sort((a,b)=>a-b).flatMap(n=>SETITEMS[n]);
 /* due now, most overdue first */
-const dueList=(t=clockNow())=>ownedItems().filter(it=>isDue(it.id,t)).sort((a,b)=>pRec(a.id).due-pRec(b.id).due);
+const dueList=(t=clockNow())=>[...kanaReviewItems(),...ownedItems()].filter(it=>isDue(it.id,t)).sort((a,b)=>pRec(a.id).due-pRec(b.id).due);
 function nextDue(){let m=Infinity;for(const id in SR.P){const p=SR.P[id];if(p.st>=1&&p.st<MASTERED&&p.due<m)m=p.due}return m}
-const newItems=()=>ownedItems().filter(it=>!stage(it.id));
+const newItems=()=>[...kanaStudyItems(),...(gateOpen()?ownedItems():[])].filter(it=>!stage(it.id)&&!isKnown(it.id)); /* v56: kana first, kanji behind the gate, Known never */
 /* ease from answer time (the item's slower side): within a third of the timer x1.2, past the timer x0.5, otherwise x1 */
 function easeMult(it,tr,tm){const lim=TLIM[it.t],t=Math.max(tr||0,tm||0);return t>lim?0.5:t<=lim/3?1.2:1}
-function srsGrade(id,right,mult=1,t=clockNow()){const p=SR.P[id]||(SR.P[id]=blankP()),from=p.st;p.last=t;/* v49: reviews graded per study day (Summary: Reviews · 7 days, Last 7 days chart); counting only */const dk=dayKey(t);SR.days=SR.days||{};SR.days[dk]=(SR.days[dk]||0)+1;
-  if(right){p.st=Math.min(MASTERED,Math.max(1,p.st)+1);if(p.st>=MASTERED){p.due=0;p.mastered=t}else p.due=t+Math.round(GAP[p.st-1]*mult)}
+function srsGrade(id,right,mult=1,t=clockNow()){const p=SR.P[id]||(SR.P[id]=blankP()),from=p.st;p.last=t;const kn=ITEMS[id]&&ITEMS[id].t==='n';/* v49: reviews graded per study day (Summary: Reviews · 7 days, Last 7 days chart); counting only */const dk=dayKey(t);SR.days=SR.days||{};SR.days[dk]=(SR.days[dk]||0)+1;
+  if(kn){/* v56 kana: 5 steps (+4h +1d +3d +7d +14d), then Mastered; a miss steps back one */
+    if(right){p.st=Math.max(1,p.st)+1;if(p.st>KGAP.length){p.st=MASTERED;p.due=0;p.mastered=t}else p.due=t+Math.round(KGAP[p.st-1]*mult)}
+    else{p.st=Math.max(1,p.st-1);p.lapses++;p.due=t+KGAP[p.st-1]}}
+  else if(right){p.st=Math.min(MASTERED,Math.max(1,p.st)+1);if(p.st>=MASTERED){p.due=0;p.mastered=t}else p.due=t+Math.round(GAP[p.st-1]*mult)}
   else{p.st=Math.max(1,p.st-2);p.lapses++;p.due=t+GAP[p.st-1]}
   srsSave();return {from,to:p.st}}
 function srsCount(id,side,ok,t=clockNow()){const p=SR.P[id]||(SR.P[id]=blankP()),c=p[side];c.n++;if(ok)c.ok++;else{SR.mistakes.unshift({id,side,t});if(SR.mistakes.length>500)SR.mistakes.length=500}p.last=t}
 /* study: items enter the review queue at Stage 1, due now - only after every card was seen and every quiz question answered right */
 function srsLearn(ids,t=clockNow()){if(SR.daily.day!==dayKey(t))SR.daily={day:dayKey(t),n:0};
-  for(const id of ids){const p=SR.P[id]||(SR.P[id]=blankP());if(p.st)continue;p.st=1;p.due=t;p.learned=t;p.last=t;SR.lessons.unshift({id,t});SR.daily.n++}
+  for(const id of ids){const p=SR.P[id]||(SR.P[id]=blankP());if(p.st)continue;p.st=1;p.due=ITEMS[id]&&ITEMS[id].t==='n'?t+KGAP[0]:t;p.learned=t;p.last=t;SR.lessons.unshift({id,t});SR.daily.n++}
   if(SR.lessons.length>500)SR.lessons.length=500;srsSave()}
 const sideWeak=c=>c.n>=4&&c.ok/c.n<0.75;
 const isMastered=id=>stage(id)>=MASTERED;
@@ -1734,7 +1796,7 @@ const kanaOf=(raw,final=true)=>{const r=toKana(raw,final);return r.done+r.rest};
 const hira=s=>s.replace(/[\u30a1-\u30f6]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
 /* comparison form: NFKC, katakana -> hiragana, no spaces or middle dots */
 const normAns=s=>hira((s||'').normalize('NFKC')).replace(/[\s\u3000・.]/g,'');
-function acceptList(it){if(it.t==='v')return (ACCEPT.vocab[it.k]||[it.r]).map(normAns);const e=ACCEPT.kanji[it.k];return e?e.accept.map(normAns):[normAns(it.kun.replace(/[()]/g,'')),...it.on.map(normAns)]}
+function acceptList(it){if(it.acc)return it.acc.map(normAns);/* v56 kana + pack words */if(it.t==='v')return (ACCEPT.vocab[it.k]||[it.r]).map(normAns);const e=ACCEPT.kanji[it.k];return e?e.accept.map(normAns):[normAns(it.kun.replace(/[()]/g,'')),...it.on.map(normAns)]}
 /* typed answer -> right/wrong. 'n' before 'y' is ambiguous when typing romaji (kinyoubi), so にゃ/にゅ/にょ also matches んや/んゆ/んよ. */
 function checkTyped(it,typed){const t=normAns(typed);if(!t)return false;const acc=acceptList(it);
   if(acc.includes(t))return true;const alt=t.replace(/に([ゃゅょ])/g,(m,y)=>'ん'+{'ゃ':'や','ゅ':'ゆ','ょ':'よ'}[y]);return alt!==t&&acc.includes(alt)}
@@ -1824,7 +1886,7 @@ function tinDisp0(){const t=document.getElementById('tin');if(!t)return;const el
   dp.innerHTML=(r.done||r.rest)?`${r.done?ja(escH(r.done)):''}${pend?`<span class="tin-pend${dim?' dim':''}">${/[a-z]/.test(pend)?escH(pend):ja(pend)}</span>`:''}${caret}`:`${caret}<span class="tin-ph${nudOn()?' nud':''}">${tinPh('Type in romaji or kana')}</span>`}
 /* v51 (Derek 2026-11-05): in the new interface the prompt line above the field is gone; its text is the field's placeholder */
 const NU_PH={m:'Type the English meaning',rk:'On or kun reading (kana or romaji)',rv:'Reading in kana (romaji ok)'};
-function tinPh(def){const t=document.getElementById('tin'),d=S.duel;if(!t||!t.classList.contains('gcu')||!d||!d.qs)return def;if(document.body.classList.contains('kbl'))return 'Type your answer';const q=d.qs[d.i];return mStep()?NU_PH.m:q.item.t==='v'?NU_PH.rv:NU_PH.rk}
+function tinPh(def){const t=document.getElementById('tin'),d=S.duel;if(!t||!t.classList.contains('gcu')||!d||!d.qs)return def;const q=d.qs[d.i];if(document.body.classList.contains('kbl'))return q&&q.item.t==='n'?'Type the sound':'Type your answer';return mStep()?NU_PH.m:q.item.t==='v'?NU_PH.rv:NU_PH.rk}
 function tinRender(){const d=S.duel,show=S.screen==='play'&&d&&d.typing&&!S.modal&&!d.paused,t=show?tinEl():document.getElementById('tin');if(!t)return;
   if(!show){const el=t.querySelector('input');if(document.activeElement===el)el.blur();t.style.display='none';document.body.classList.remove('kbopen');if(typeof kblSync==='function')kblSync();return}
   t.style.display='';const q=d.qs[d.i],fb=d.phase==='fb',r=d.res[d.i];
@@ -1841,7 +1903,7 @@ function tinRender(){const d=S.duel,show=S.screen==='play'&&d&&d.typing&&!S.moda
    "I knew it" (gold) appears on a wrong MEANING answer, and Submit becomes Next. Advancing follows Settings > After answering. */
 const mStep=()=>{const d=S.duel;return !!(d&&d.two&&d.phase==='ask'&&d.qs[d.i]&&d.qs[d.i].part==='m')};
 const autoNext=()=>!!S.set.autoNext; /* v22: false = Wait for Next (default), true = Auto-continue */
-const HINT={rk:'Type the on or kun reading (in kana or romaji)',rv:'Type the reading in kana (romaji ok)',m:'Type the English meaning'};
+const HINT={rn:'Type its sound (romaji or kana)',rk:'Type the on or kun reading (in kana or romaji)',rv:'Type the reading in kana (romaji ok)',m:'Type the English meaning'};
 function partRow(q,k,p){const ok=p.ok,ic=ok?icon('CHECK','var(--good2)',2):'<span class="px" style="color:var(--bad2)">✕</span>',lab=k==='r'?'Reading':'Meaning';
   const you=k==='r'?ja(escH(p.typed)):escH(p.typed);
   const ans=ok?(p.override?'<span class="tin-knew">I knew it</span>':p.as?`<span class="tin-arw">≈</span><b class="tin-ans">${escH(p.as)}</b>`:''):`<span class="tin-arw">→</span><b class="tin-ans">${k==='r'?rd(q.answer):q.item.m}</b>`;
@@ -1890,7 +1952,7 @@ function schedNext(r){clearTimeout(fbTimer);if(!autoNext())return;if(r.two&&r.pa
    (right = both right on the first try in this session). Study: a wrong question is asked again at the end. Practice: no records. */
 function recordQ(r){if(!r||r.rec)return;r.rec=true;const d=S.duel;if(!d)return;const it=r.q.item,k=r.part==='m'?'m':'r';
   const e=d.part[it.id]||(d.part[it.id]={});
-  if(!(k in e)){e[k]={ok:r.correct,t:r.time};if(d.mode==='review')srsCount(it.id,k,r.correct);else if(d.mode==='practice'&&SR.P[it.id]){SR.P[it.id].seen=clockNow();srsSave()}if(!d.two)e.m=e.r;
+  if(!(k in e)){e[k]={ok:r.correct,t:r.time};if(d.mode==='review')srsCount(it.id,k,r.correct);else if(d.mode==='practice'&&SR.P[it.id]){SR.P[it.id].seen=clockNow();srsSave()}if(!d.two||it.t==='n')e.m=e.r;
     if(e.r&&e.m&&!e.done){e.done=true;const right=e.r.ok&&e.m.ok;d.done.push({id:it.id,right});
       if(d.mode==='review'){const g=srsGrade(it.id,right,right?easeMult(it,e.r.t,e.m.t):1);if(g.to>g.from)d.moves.up++;else if(g.to<g.from)d.moves.down++}}}
   if(d.mode==='study'&&!r.correct)d.qs.push(Object.assign(makeQ(it,k),{no:r.q.no,again:true}))}
@@ -2668,7 +2730,7 @@ R.homeCards=()=>{const due=dueList().length,left=newLeft(),avail=newItems().leng
 <div style="height:44px;flex:none"></div>
 <div class="gc-greet"><div class="gc-g1 brush notranslate" lang="ja" translate="no">漢字決闘</div><div class="gc-g0">KANJI DUEL</div></div>
 ${adsOn()?`<div class="gc-ad">${adBanner('home')}</div>`:''/* TEMP-MONETIZATION-SWITCH */}
-<div class="gc-fill"></div>
+<div class="gc-fill"></div>${kanaBanner()}
 <div class="gc-sec"><span class="gc-clock" aria-label="Current time">${gcClock()}</span><div class="gc-streak" aria-label="${S.streak}-day streak">${gsv(GCI.flame,22,true)}${S.streak}-day streak</div></div>
 <div class="gc-grid">${cell('study',nr,'Study · new',`Study: ${nr?nr+' new':ssub}`)}${cell('review',due,'In review',`Review: ${due} due`)}${cell('go:sets','札','Sets · browse','Sets: browse kanji sets',' k')}${cell('go:mastery',g.l,'Learned · total',`Summary: ${g.l} learned, ${g.m} mastered`)}</div>
 ${gcFadeUI()}<div class="gc-bot">
@@ -2860,7 +2922,13 @@ R.study=()=>{const c=S.card,ses=!!c.list,L=ses?c.list.map(id=>ITEMS[id]):SETITEM
   const lab=t=>`<span class="px" style="font-size:13px;color:var(--stc-lab,#7a7590);margin-right:10px">${t}</span>`;
   let front,back;
   const so=c.flip&&it.t==='k'&&hasSO(it.k);
-  if(it.t==='k'){front=ja(it.k,'font-size:150px;line-height:1.1;font-weight:800;color:var(--stc-fg,#1a1626)','serif');
+  if(it.t==='n'){/* v56 kana: the sound in romaji (Derek 2026-11-07), katakana also its hiragana; no meaning */const big=Array.from(it.k).length>1?110:150;
+    front=ja(it.k,`font-size:${big}px;line-height:1.1;font-weight:800;color:var(--stc-fg,#1a1626)`,'serif');
+    back=`${ja(it.k,`font-size:${Math.round(big*.64)}px;line-height:1.1;font-weight:800;color:var(--stc-fg,#1a1626)`,'serif')}
+<div style="display:flex;align-items:center;margin-top:12px">${lab('SOUND')}<span class="kro" style="font-size:34px;font-weight:700;color:var(--stc-rd,#8a5b00)">${it.ro}</span></div>
+${it.sc==='k'?`<div style="display:flex;align-items:center;margin-top:6px">${lab('HIRAGANA')}${ja(it.r,'font-size:26px;color:var(--stc-on,#4a4560);font-weight:500')}</div>`:''}
+<div style="font-size:17px;color:var(--stc-lab,#7a7590);margin-top:14px;font-weight:700">${it.k==='っ'||it.k==='ッ'?'Doubles the next sound · type xtsu':it.k==='ー'?'Stretches the vowel before it · type -':kanaPackName(it.pk)}</div>`}
+  else if(it.t==='k'){front=ja(it.k,'font-size:150px;line-height:1.1;font-weight:800;color:var(--stc-fg,#1a1626)','serif');
     back=`${so?kbox(it.k):ja(it.k,'font-size:96px;line-height:1.1;font-weight:800;color:var(--stc-fg,#1a1626)','serif')}
 <div style="display:flex;align-items:center;margin-top:12px">${lab('KUN')}${ja(it.kun?kana(it.kun):'—','font-size:34px;font-weight:700;color:var(--stc-rd,#8a5b00)')}</div>
 <div style="display:flex;align-items:center;margin-top:6px">${lab('ON')}${ja(it.on.length?it.on.join('・'):'—','font-size:26px;color:var(--stc-on,#4a4560);font-weight:500')}</div>
@@ -2868,11 +2936,11 @@ R.study=()=>{const c=S.card,ses=!!c.list,L=ses?c.list.map(id=>ITEMS[id]):SETITEM
   else{const fs=it.k.length>2?72:96;front=ja(it.k,`font-size:${fs}px;line-height:1.1;font-weight:800;color:var(--stc-fg,#1a1626)`,'serif');
     back=`${ja(it.k,`font-size:${Math.round(fs*.7)}px;line-height:1.1;font-weight:800;color:var(--stc-fg,#1a1626)`,'serif')}${ja(it.r,'display:block;font-size:34px;font-weight:700;color:var(--stc-rd,#8a5b00);margin-top:14px')}<div style="font-size:24px;color:var(--stc-fg,#1a1626);margin-top:14px;font-weight:700">${it.m}</div>`}
   return `${bg(SCENE.study)}<div class="layer">${STATUS}${hdr('Study','学ぶ',ses?'':'<div class="tag tap" data-act="studyDone" style="font-size:14px;padding:6px 10px">Done</div>')}${adBanner('study')/* TEMP-MONETIZATION-SWITCH */}
-<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 22px 0"><span class="plate px" style="font-size:16px;color:var(--strong);padding:0 8px">${ses?'New · Set '+it.set:'Set '+c.set}</span><span class="plate" style="font-size:15px;font-weight:700;padding:2px 8px">${it.t==='k'?'Kanji':'Vocabulary'} · ${c.i+1} / ${L.length}</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 22px 0"><span class="plate px" style="font-size:16px;color:var(--strong);padding:0 8px">${ses?'New · '+(it.pk?kanaPackName(it.pk).replace(/^\w+ · /,''):'Set '+it.set):'Set '+c.set}</span><span class="plate" style="font-size:15px;font-weight:700;padding:2px 8px">${it.t==='k'?'Kanji':it.t==='n'?(it.sc==='h'?'Hiragana':'Katakana'):'Vocabulary'} · ${c.i+1} / ${L.length}</span></div>
 <div style="padding:12px 22px 0"><div style="height:10px;background:var(--ink);padding:2px"><div style="width:${(c.i+1)/L.length*100}%;height:100%;background:var(--gold)"></div></div></div>
 <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:18px 30px">
 <div class="tap stc" data-act="flip" style="position:relative;width:100%;height:100%;max-height:450px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--offw);box-shadow:inset 0 0 0 2px #fff,inset 0 -6px 0 0 var(--offw3),0 -3px 0 0 #1a1626,0 3px 0 0 #1a1626,-3px 0 0 0 #1a1626,3px 0 0 0 #1a1626,0 9px 0 0 rgba(26,22,38,.45);padding:20px">
-${c.flip?back:front}<div class="px" style="font-size:15px;color:var(--stc-hint,#5f5a74);margin-top:24px">${c.flip?'TAP TO HIDE':'TAP TO REVEAL'}</div>${so?soBtn(it.k):''}</div></div>
+${kbrainBtn(it)}${c.flip?back:front}<div class="px" style="font-size:15px;color:var(--stc-hint,#5f5a74);margin-top:24px">${c.flip?'TAP TO HIDE':'TAP TO REVEAL'}</div>${so?soBtn(it.k):''}</div></div>
 ${ses?tfcUI():''/* TEMP-FORCE-CHAR */}<div style="padding:0 26px 44px;display:flex;gap:18px"><div class="btn out ${c.i?'':'dis2'}" style="flex:1;font-size:18px" data-act="prev">${icon('CHL','currentColor',2)} Prev</div><div class="btn wh" style="flex:1.4;font-size:20px" data-act="${last?(ses?'studyQuiz':'studyDone'):'next'}">${last?(ses?'Review '+icon('TRI','#2a2440',2):'Done '+icon('CHECK','#2a2440',2)):'Next '+icon('CHR','#2a2440',2)}</div></div></div>`};
 function nameSize(en,jp){return Math.max(20,Math.min(36,Math.floor((350-(JL()?jp.length*30:0))/(en.length*0.74))))}
 const STUDY_TAUNT='Ready to see what stuck?';
@@ -3145,7 +3213,7 @@ const CREDITS=()=>[
   ['Sound effects','Short tones generated in the app; no recordings.','Own work']]]];
 const credHtml=()=>CREDITS().map(([g,jp,L])=>`<div class="panel credgrp" style="margin-top:14px;padding:6px 14px 6px">${sec(g,jp)}${L.map(([n,ds,lic],i)=>`<div class="cred" style="padding:9px 2px;${i<L.length-1?'border-bottom:2px solid var(--line)':''}"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><span class="cname" style="font-size:15px;font-weight:700;color:${Dk()?'var(--gold)':'var(--ind)'}">${n}</span><span class="px clic" style="font-size:12px;color:var(--txt);white-space:nowrap;flex:none">${lic}</span></div><div style="font-size:14px;line-height:1.45;color:var(--mut);margin-top:3px">${ds}</div></div>`).join('')}</div>`).join('');
 R.about=()=>`${menuBg(true)}<div class="layer">${STATUS}${hdr('About','情報')}
-${scroll(`<div class="panel" style="margin-top:16px;padding:14px 14px 12px;text-align:center">${logo(false)}<div class="tap" data-act="ver" style="font-size:14px;color:var(--mut);margin-top:8px">Version 1.0 (prototype v55)</div></div>
+${scroll(`<div class="panel" style="margin-top:16px;padding:14px 14px 12px;text-align:center">${logo(false)}<div class="tap" data-act="ver" style="font-size:14px;color:var(--mut);margin-top:8px">Version 1.0 (prototype v56)</div></div>
 ${credHtml()}<div style="height:24px"></div>`,'padding:4px 18px 0')}</div>`;
 R.dev=()=>{const t=clockNow(),dt=new Date(t),off=SR.clock||0;
   const b=(l,a)=>`<div class="btn out" style="flex:1;height:48px;font-size:15px" data-act="${a}">${l}</div>`;
@@ -3155,7 +3223,8 @@ ${scroll(`<div class="panel" style="margin-top:16px;padding:12px 14px"><div clas
 <div style="font-size:14px;color:var(--mut);margin-top:10px">Due now ${B(dueList().length)} · learned today ${B(newToday())} / ${S.set.newPerDay} · study day ${dayKey()}</div></div>
 ${monPanel()/* TEMP-MONETIZATION-SWITCH */}<div class="panel" style="margin-top:14px;padding:12px 14px"><div class="px" style="font-size:15px;color:var(--h1)">PROGRESS</div><div style="display:flex;gap:12px;margin-top:12px">${b('Load demo progress','demo')}${b('Clear progress','wipe')}</div></div>`,'padding:4px 18px 0')}</div>`};
 /* ---------- duel engine (v25: review sessions) ---------- */
-function makeQ(it,part){if(part==='m')return {item:it,q:it.k,answer:it.m,label:'MEANING',kind:'meaning',part:'m',opts:[]};
+function makeQ(it,part){if(it.t==='n')return {item:it,q:it.k,answer:it.ro,label:'READING',kind:'sound',part:'r',opts:[]};/* v56: a kana asks its sound only */
+  if(part==='m')return {item:it,q:it.k,answer:it.m,label:'MEANING',kind:'meaning',part:'m',opts:[]};
   if(it.t==='v')return {item:it,q:it.k,answer:it.r,label:'VOCAB',kind:'vocab',part:'r',opts:[]};
   const fmt=it.kun&&it.on0?'full':it.on0?'on':'kun',str=x=>fmt==='full'?x.kun+'|'+x.on0:fmt==='on'?x.on0:x.kun;
   const answer=str(it);return {item:it,q:it.k,answer,label:'READING',kind:fmt==='full'?'kun | on':fmt==='on'?'on only':'kun only',part:'r',opts:[]}}
@@ -3336,7 +3405,7 @@ function newDuel(opp,mode='review',items=null){items=items||(mode==='review'?due
   let OL=window.__forceBg?OPP.filter(o=>!PSCENE[o[0]]):OPP;if(!OL.length)OL=OPP;opp=opp||fo||OL[Math.floor(Math.random()*OL.length)];
   const two=TWO(),order=S.set.askFirst==='meaning'?['m','r']:['r','m'];
   S.duel={typing:true,two,order,tStep:0,mode,items:items.map(it=>it.id),scene:PSCENE[opp[0]]?'paint:'+opp[0]:(window.__forceBg&&BG.hasOwnProperty(window.__forceBg))?window.__forceBg:pickScene(opp[0]),opp,
-    qs:items.flatMap((it,i)=>(two?order:['r']).map(p=>Object.assign(makeQ(it,p),{no:i+1}))),i:0,res:[],phase:'ask',paused:false,done:[],part:{},moves:{up:0,down:0},
+    qs:items.flatMap((it,i)=>(two&&it.t!=='n'?order:['r']).map(p=>Object.assign(makeQ(it,p),{no:i+1}))),i:0,res:[],phase:'ask',paused:false,done:[],part:{},moves:{up:0,down:0},
     weakRun:mode==='practice',label:mode==='review'?'Review':mode==='study'?'Study quiz':'Practice'}}
 // v10 duel scenes: one per duel, kept for every question, pause and feedback of that duel. Art is 180x320 shown at 3x.
 function duelBg(sc){/* duel: scene shifted right so the face clears the question card */if(String(sc).startsWith('paint:'))return `<div class="bg a-psc-${sc.slice(6)}" style="left:0;top:0;margin:${-15-3*pscTop(sc.slice(6))}px 0 0 0"></div>`;const b=BG[sc];if(!b||b.theme)return bg(SCENE.play,'top:0;margin-top:-125px;margin-left:-330px');const p=b.duel;
@@ -3606,6 +3675,7 @@ function nuKbl(d,q,fb,r,lim,el,over){const ok=fb&&r&&r.correct,done=d.i+(fb?1:0)
 ${fb?`<div class="kbl-pill ${ok?'ok':'bad'}${pop}">${ok?NU_TICK:NU_CROSS}<span>${ok?'CORRECT':'INCORRECT'}</span></div>`:''}</div>`}
 /* accepted answers as chips (readings grouped On / Kun) for the unified card's feedback block */
 function nuChips(q,k,ok){const it=q.item,mk=`<span class="nu-mk ${ok?'g':'b'}">${ok?NU_TICK:NU_CROSS}</span>`,ch=L=>`<span class="chips">${L.map(x=>`<span class="chip-r">${ja(escH(x))}</span>`).join('')}</span>`;
+  if(it.t==='n')return `<div class="gfb-d">${mk}SOUND</div><div class="arow">${ch([it.ro])}${it.sc==='k'?ch([it.r]):''}</div>`;/* v56 kana */
   if(k==='m'){const L=meaningList(it);return `<div class="gfb-d">${mk}ACCEPTED MEANING${L.length>1?'S':''}</div><div class="arow">${ch(L)}</div>`}
   if(it.t==='v'){const L=ACCEPT.vocab[it.k]||[it.r];return `<div class="gfb-d">${mk}ACCEPTED READING${L.length>1?'S':''}</div><div class="arow">${ch(L)}</div>`}
   const e=ACCEPT.kanji[it.k];if(!e)return `<div class="gfb-d">${mk}ACCEPTED READING</div><div class="gfb-m">${rd(q.answer)}</div>`;
@@ -3626,7 +3696,7 @@ function kblSync(){const d=S.duel,t=document.getElementById('tin'),b=document.bo
 function nuQline(){const d=S.duel,L=d&&d.line;if(!L||performance.now()-L.at>=QLINE_MS)return '';return `<div class="qline nu-ql${performance.now()-L.at<200?'':' still'}" aria-hidden="true">${L.t}</div>`}
 
 /* ---------- feedback bubble (§10): only the accepted answers ---------- */
-function nuAccepted(q,k){const it=q.item;
+function nuAccepted(q,k){const it=q.item;if(it.t==='n')return {lab:'Sound',h:escH(it.ro)};/* v56 kana: the sound in romaji */
   if(k==='m'){const L=meaningList(it);return {lab:L.length>1?'Accepted meanings':'Accepted meaning',h:escH(L.join(' · '))}}
   if(it.t==='v'){const L=(ACCEPT.vocab[it.k]||[it.r]);return {lab:L.length>1?'Accepted readings':'Accepted reading',h:ja(escH(L.join('・')))}}
   const e=ACCEPT.kanji[it.k];if(!e)return {lab:'Accepted readings',h:rd(q.answer)};
@@ -3638,7 +3708,7 @@ const NU_CROSS='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stro
 function nuTin(t,d,q,fb,r){const k=q.part||'r',p=nuPal(d.scene),el=t.querySelector('input');
   t.className='two gcu'+(fb?' fb':'')+(!fb&&k==='m'?' mstep':'');t.setAttribute('style',nuVars(p));
   const ra=nuEl(d.accAt);if(d.accAt&&ra<950&&!RM()){t.classList.add('nu-rise');t.style.animationDelay=Math.round(550-ra)+'ms'}
-  t.querySelector('.tin-hint').textContent=k==='m'?HINT.m:q.item.t==='v'?HINT.rv:HINT.rk;
+  t.querySelector('.tin-hint').textContent=k==='m'?HINT.m:q.item.t==='v'?HINT.rv:q.item.t==='n'?HINT.rn:HINT.rk;
   /* v52 unified card (keyboard up): READING/MEANING label + question word, shown only in the 'kbl' layout */
   let tq=t.querySelector('.tin-q');if(!tq){tq=document.createElement('div');tq.className='tin-q';tq.innerHTML='<div class="tin-ql"></div><div class="tin-qw"></div>';t.insertBefore(tq,t.firstChild)}
   const nud=!fb&&d.nud&&d.nud[d.i],nr=performance.now()-(d.nudgeAt||0),ql=tq.querySelector('.tin-ql'),qw=tq.querySelector('.tin-qw'),qn=Array.from(q.q).length;
@@ -3759,7 +3829,7 @@ function nuMastery(){nuEnter('mastery');const g=gradeStats('N5'),due=dueList().l
 <div class="nm-lk tap" data-act="go:weakitems" role="button"><b>${wl}</b><div><div class="ns-l">Weak items</div><div class="ns-sub">Under 75% right on the reading or meaning (4+ answers)</div></div><span class="ns-arr">›</span></div></div>
 <div class="nm-card"><div class="nm-h">Extra review</div><div class="ns-sub" style="margin:-4px 0 6px">A random mix from your latest items, as practice. Stages, review dates and counts stay the same.</div>${ex('l')}${ex('x')}</div>
 <div class="nm-card"><div class="nm-h">How stages work</div><div class="nm-p">Each review asks an item's <b>reading</b> and <b>meaning</b>. Get both right and it moves up one stage, from <b>Stage 1</b> to <b>Stage 9</b>, then <b>Mastered</b>. A miss moves it back <b>2 stages</b>. Higher stages wait longer before they come back (10 minutes at Stage 1, about 4 months at Stage 9).</div><div class="nm-lk tap" data-act="lesson" role="button"><div class="ns-l">New to readings? Reading basics</div><span class="ns-arr">›</span></div></div>`;
-  return nuPage('Summary','Your progress so far','',`<div class="nm">${hero}${grid}<div class="nm-card"><div class="nm-h">Set progress</div>${rows||'<div class="ns-sub">No sets yet.</div>'}</div>${act7}${more}</div>`)}
+  return nuPage('Summary','Your progress so far','',`<div class="nm">${hero}${grid}${kanaFoundCard()}<div class="nm-card"><div class="nm-h">Set progress</div>${rows||'<div class="ns-sub">No sets yet.</div>'}</div>${act7}${more}${kanaKnownWin()}</div>`)}
 
 /* ---------- Sets (§6). v50 (user 2026-11-05): grouped by grade (collapsible), grade filter chips, status filter, sort ---------- */
 /* TEST-GRADE-DATA (testing only, user 2026-11-05): placeholder sets for the grades after Beginner, so the Sets grade filter, sort and
@@ -3789,11 +3859,11 @@ function nuSets(){nuEnter('sets');const A=nuAllSets(),F=A.filter(x=>(SF.g==='all
 ${x.own?`${nuBar(x.pct,'acc')}<div class="nsc-p">${x.pct}%</div>`:`<div class="nsc-l">${!x.real||monB()?'Coming soon':NU_LOCK+' Locked'}</div>`}</div>`;
   const groups=GRADES.filter(([g])=>SF.g==='all'||SF.g===g).map(([g,nm])=>{const L=nuSortSets(F.filter(x=>x.g===g)),all=A.filter(x=>x.g===g),own=all.filter(x=>x.own).length,o=SF.g!=='all'||!!SF.open[g];
     if(!L.length&&SF.g==='all')return '';
-    return `<div class="nsgr${o?' open':''}" data-grade="${g}"><div class="nsgh${SF.g==='all'?' tap':''}" ${SF.g==='all'?`data-act="sgo:${g}" role="button" aria-expanded="${o}"`:''}><div><div class="nsgh-t">${nm}</div><div class="nsgh-s">${GRADE_LINE[g]} · ${all.length} set${all.length===1?'':'s'}${own?` · ${own} ${monB()?'started':'owned'}`:g==='N5'?'':' · coming soon'}</div></div>${SF.g==='all'?NU_CHEV:''}</div>
+    return `<div class="nsgr${o?' open':''}" data-grade="${g}"><div class="nsgh${SF.g==='all'?' tap':''}" ${SF.g==='all'?`data-act="sgo:${g}" role="button" aria-expanded="${o}"`:''}><div><div class="nsgh-t">${nm}</div><div class="nsgh-s">${GRADE_LINE[g]} · ${all.length} set${all.length===1?'':'s'}${g==='N5'&&!gateOpen()?` · ${NU_LOCK} opens when both kana scripts are complete`:''}${own?` · ${own} ${monB()?'started':'owned'}`:g==='N5'?'':' · coming soon'}</div></div>${SF.g==='all'?NU_CHEV:''}</div>
 <div class="ns-bw"><div class="ns-bd"><div class="nsg">${L.map(card).join('')||'<div class="ns-sub" style="grid-column:1/-1;padding:10px 4px">No sets here.</div>'}</div></div></div></div>`}).join('');
   const right=`<div class="nh-pill tap" data-act="${monB()?'prem':'restore'}" role="button">${monB()?'Premium':'Restore'}</div>`/* TEMP-MONETIZATION-SWITCH */;
   const note=monB()?'All sets are free. Ads keep them free; Premium removes the ads. Tap any set to preview its kanji &amp; vocab.'/* TEMP-MONETIZATION-SWITCH */:'Beginner Sets 1–4 are free. Every other set is $0.99. Tap any set to preview its kanji &amp; vocab.';
-  return nuPage('Sets','Browse &amp; unlock kanji sets',right,`${seg}${gch}<div class="nsf">${sort}</div>${groups||'<div class="ns-sub" style="padding:18px 4px">No sets here.</div>'}<div class="nsn">${note}</div><div class="nsn soon">Elementary, Intermediate and higher levels are coming soon.</div>`)}
+  return nuPage('Sets','Browse &amp; unlock kanji sets',right,`${seg}${gch}<div class="nsf">${sort}</div>${kanaSetsHtml()}${groups||'<div class="ns-sub" style="padding:18px 4px">No sets here.</div>'}<div class="nsn">${note}</div><div class="nsn soon">Elementary, Intermediate and higher levels are coming soon.</div>`)}
 
 /* ---------- wiring ---------- */
 R.settings=()=>NU()?nuSettings():_R0.settings();
@@ -3863,4 +3933,197 @@ function nuTitle(){const [deep,card,card2,acc]=gcPal(),v=`--gc-deep:${deep};--gc
 <div class="gst-card"><div class="gst-kanji" lang="ja">漢字決闘</div><div class="gst-en">KANJI DUEL</div><div class="gst-sub">Study Japanese kanji and vocabulary</div></div>
 <div class="gst-sp"></div>
 <div class="gst-btn tap" data-act="go:home" role="button" aria-label="Tap to start"><span class="gst-sym" aria-hidden="true">➤</span><span class="gst-txt">TAP TO START</span></div></div>`}
+
+/* =====================================================================================================
+   v56 KANA FOUNDATIONS (Derek 2026-11-07, notes/KANA_FOUNDATIONS.md, design revision 5; board notes/ui_mockups/kana-foundations-flow-v5.html)
+   - Hiragana and katakana are items like kanji (t:'n', id 'n:<char>'), in row packs per script (Vowels; K+G; S+Z; T+D; N; H+B/P; M; Y;
+     R; W+ん; Combinations incl. small っ, katakana also ー). A pack also holds words made only of sounds up to that pack (t:'v', id
+     'w:<word>'), which are normal vocab items (reading + meaning, 9-step schedule).
+   - A kana item asks ONE question (its sound). Kana SRS: 5 steps, +4h +1d +3d +7d +14d, then Mastered; a miss steps back one.
+   - Known (declared): SR.known[id]=time. Excluded from Study and Review, counts as complete for the kanji gate, separate from Mastered;
+     unmarking returns the item to New. Marking deletes the item's SRS record.
+   - Kanji gate: new users get kanji once both scripts' characters are Learned / Mastered / Known. Accounts that already had progress
+     when v56 first ran are not locked; they get the one-time kana setup instead (SR.kana.legacy).
+   - Romaji (Derek 2026-11-07): a kana's sound is shown in romaji (Study card, lists, accepted answer). Kanji and word readings stay kana.
+   - Saved data: inside kd-srs-v1 only (SR.kana = {h,k: 'learn'|'some'|'know', setup, legacy}, SR.known). No new keys.
+   - Test hook: window.__kanaSkip (set by the older test suites) makes a fresh profile behave as before v56 (no kana, no gate, no setup).
+   ===================================================================================================== */
+var KD=null;
+const KGAP=[4*HR,DAY,3*DAY,7*DAY,14*DAY];
+if(!window.__kanaSkip)TLIM.n=30; /* seconds per kana question */
+const kata=s=>s.replace(/[ぁ-ゖ]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
+function kanaData(){if(KD)return KD;
+  const ROWS={a:['あいうえお','a i u e o'],k:['かきくけこ','ka ki ku ke ko'],s:['さしすせそ','sa shi su se so'],t:['たちつてと','ta chi tsu te to'],n:['なにぬねの','na ni nu ne no'],
+    h:['はひふへほ','ha hi fu he ho'],m:['まみむめも','ma mi mu me mo'],y:['やゆよ','ya yu yo'],r:['らりるれろ','ra ri ru re ro'],w:['わを','wa wo'],N:['ん','n'],
+    g:['がぎぐげご','ga gi gu ge go'],z:['ざじずぜぞ','za ji zu ze zo'],d:['だぢづでど','da ji zu de do'],b:['ばびぶべぼ','ba bi bu be bo'],p:['ぱぴぷぺぽ','pa pi pu pe po']};
+  const YO=[['き','ky'],['ぎ','gy'],['し','sh'],['じ','j'],['ち','ch'],['に','ny'],['ひ','hy'],['び','by'],['ぴ','py'],['み','my'],['り','ry']];
+  const EXTRA={'ぢ':['じ'],'づ':['ず'],'を':['お']};
+  const PACKS=[['Vowels','a'],['K row + G','kg'],['S row + Z','sz'],['T row + D','td'],['N row','n'],['H row + B/P','hbp'],['M row','m'],['Y row','y'],['R row','r'],['W row + ん','wN'],['Combinations','c']];
+  /* words: [pack number (1-11), word, meaning(s)] - only sounds from that pack or earlier ones (checked below) */
+  const WORDS={h:[[1,'あい','love'],[1,'いえ','house; home'],[1,'うえ','above; top; up'],[1,'あお','blue'],
+    [2,'かお','face'],[2,'あき','autumn; fall'],[2,'えき','station'],[2,'かぎ','key'],[2,'こえ','voice'],
+    [3,'あさ','morning'],[3,'いす','chair'],[3,'すし','sushi'],[3,'かさ','umbrella'],[3,'かぜ','wind'],
+    [4,'て','hand'],[4,'くち','mouth'],[4,'つくえ','desk'],[4,'そと','outside'],[4,'うた','song'],
+    [5,'なつ','summer'],[5,'いぬ','dog'],[5,'ねこ','cat'],[5,'なに','what'],[5,'あに','older brother'],
+    [6,'はな','flower'],[6,'ひと','person'],[6,'ふね','boat; ship'],[6,'ほし','star'],[6,'くび','neck'],
+    [7,'め','eye'],[7,'みみ','ear'],[7,'まど','window'],[7,'むし','insect; bug'],[7,'あめ','rain'],
+    [8,'やま','mountain'],[8,'ゆき','snow'],[8,'へや','room'],[8,'ゆめ','dream'],
+    [9,'よる','night'],[9,'くるま','car'],[9,'いろ','colour; color'],[9,'はる','spring'],[9,'とり','bird'],
+    [10,'わたし','I; me'],[10,'にわ','garden'],[10,'ほん','book'],[10,'みかん','mandarin orange; orange'],[10,'かわ','river'],
+    [11,'きって','stamp'],[11,'がっこう','school'],[11,'でんしゃ','train'],[11,'しゃしん','photo; photograph; picture'],[11,'おちゃ','tea; green tea'],[11,'きょう','today']],
+    k:[[2,'ココア','cocoa; hot chocolate'],[3,'ガス','gas'],[3,'アイス','ice cream; ice'],
+    [4,'テスト','test'],[4,'デスク','desk'],[4,'ガイド','guide'],[5,'テニス','tennis'],[5,'ネクタイ','necktie; tie'],
+    [6,'バス','bus'],[6,'ピザ','pizza'],[6,'ポスト','postbox; mailbox'],[7,'マスク','mask'],[7,'メモ','memo; note'],[7,'トマト','tomato'],
+    [8,'タイヤ','tyre; tire'],[8,'ヨガ','yoga'],[9,'ホテル','hotel'],[9,'カメラ','camera'],[9,'ラジオ','radio'],[9,'トイレ','toilet; restroom; bathroom'],[9,'クラス','class'],
+    [10,'ワイン','wine'],[10,'パン','bread'],[10,'ペン','pen'],[10,'レモン','lemon'],[10,'ズボン','trousers; pants'],
+    [11,'コーヒー','coffee'],[11,'ケーキ','cake'],[11,'ジュース','juice'],[11,'シャツ','shirt'],[11,'ベッド','bed'],[11,'ノート','notebook; note']]};
+  const VOW={a:'あ',i:'い',u:'う',e:'え',o:'お'};
+  const D={all:[],chars:{h:[],k:[]},order:{h:[],k:[]},packs:[],table:{h:[],k:[]},roOf:{},bad:[]};
+  for(const sc of ['h','k']){const cv=s=>sc==='k'?kata(s):s,SN=sc==='h'?'Hiragana':'Katakana';
+    const mk=(hira,ro,row,acc)=>{const ch=cv(hira),it={id:'n:'+ch,t:'n',sc,k:ch,r:hira,ro,m:'',row,acc:[hira,...(acc||EXTRA[hira]||[])]};D.roOf[ch]=ro;return it};
+    const rowItems={};for(const key in ROWS){const [cs,rs]=ROWS[key],ro=rs.split(' ');rowItems[key]=Array.from(cs).map((c,i)=>mk(c,ro[i],key))}
+    rowItems.c=[];for(const [b,r] of YO)['ゃ','ゅ','ょ'].forEach((y,i)=>rowItems.c.push(mk(b+y,r+['a','u','o'][i],'c')));
+    rowItems.c.push(mk('っ','small tsu','c',['っ']));if(sc==='k')rowItems.c.push(mk('ー','long vowel','c',['ー']));
+    PACKS.forEach(([name,keys],pi)=>{const key=sc+(pi+1),chars=keys==='c'?rowItems.c:Array.from(keys).flatMap(x=>rowItems[x]);
+      const words=WORDS[sc].filter(w=>w[0]===pi+1).map(([,w,m])=>{const hr=hira(w),alt=hr.replace(/(.)ー/g,(x,c)=>{const ro=D.roOf[cv(c)]||'';return c+(VOW[ro.slice(-1)]||'ー')});
+        return {id:'w:'+w,t:'v',sc,k:w,r:w,m,kw:1,acc:[...new Set([hr,alt])]}});
+      const pk={key,sc,i:pi,name:sc==='k'?name.replace('ん','ン'):name,script:SN,chars,words,items:[]};
+      for(const it of chars){it.pk=key;pk.items.push(it)}for(const it of words){it.pk=key;pk.items.push(it)}
+      D.packs.push(pk);D.chars[sc].push(...chars);D.order[sc].push(...chars,...words)});
+    /* words may use only the sounds of their pack and the packs before it */
+    D.packs.filter(p=>p.sc===sc).forEach(p=>{const ok=new Set(D.packs.filter(q=>q.sc===sc&&q.i<=p.i).flatMap(q=>q.chars.flatMap(c=>Array.from(c.k))));
+      p.words.forEach(w=>{if(Array.from(w.k).some(c=>!ok.has(c)))D.bad.push(w.k)})});
+    /* first-login table: row groups in A-I-U-E-O order; ん is its own row here (in the packs it rides with W) */
+    const TN={a:'Vowels',k:'K row',s:'S row',t:'T row',n:'N row',h:'H row',m:'M row',y:'Y row',r:'R row',w:'W row',N:cv('ん'),g:'G row',z:'Z row',d:'D row',b:'B row',p:'P row',c:'Combinations'};
+    D.table[sc]=['a','k','s','t','n','h','m','y','r','w','N','g','z','d','b','p','c'].map(x=>({key:sc+'-'+x,name:TN[x],items:rowItems[x]}))}
+  D.all=[...D.order.h,...D.order.k];D.byPack={};D.packs.forEach(p=>D.byPack[p.key]=p);
+  if(!window.__kanaSkip)for(const it of D.all)ITEMS[it.id]=it;/* older test suites (skip flag) see the pre-v56 item set */
+  if(D.bad.length)console.error('kana pack words use sounds from a later pack:',D.bad.join(' '));
+  return KD=D}
+kanaData();
+/* ---------- state ---------- */
+function kst(){if(!SR.kana||typeof SR.kana!=='object')SR.kana=window.__kanaSkip?{skip:1}:Object.keys(SR.P).length?{legacy:1}:{};return SR.kana}
+const kanaOn=()=>{const k=kst();return !k.skip&&!!k.setup};
+const kanaNeedsSetup=()=>{const k=kst();return !k.skip&&!k.setup};
+const isKnown=id=>!!(SR.known&&SR.known[id]);
+const kDone=id=>isKnown(id)||stage(id)>=1;
+const kanaPct=sc=>{const L=kanaData().chars[sc];return Math.floor(L.filter(it=>kDone(it.id)).length/L.length*100)};
+const kanaComplete=sc=>kanaData().chars[sc].every(it=>kDone(it.id));
+function gateOpen(){const k=kst();return !!(k.skip||k.legacy)||(kanaComplete('h')&&kanaComplete('k'))}
+/* Study: every kana character (Known ones drop out in newItems); a script's words only while that script is being taught (not 'I know it') */
+function kanaStudyItems(){if(!kanaOn())return [];const k=kst();return ['h','k'].flatMap(sc=>kanaData().order[sc].filter(it=>it.t==='n'||k[sc]!=='know'))}
+const kanaReviewItems=()=>kanaOn()?kanaData().all:[];
+function kmark(ids,t=clockNow()){SR.known=SR.known||{};for(const id of ids){if(!ITEMS[id])continue;delete SR.P[id];SR.known[id]=t}srsSave()}
+function kunmark(ids){if(!SR.known)return;for(const id of ids)delete SR.known[id];srsSave()}
+const kanaPackPct=p=>Math.floor(p.items.filter(it=>kDone(it.id)).length/Math.max(1,p.items.length)*100);
+const kanaPackName=key=>{const p=kanaData().byPack[key];return p?`${p.script} · ${p.name}`:key};
+const KBRAIN='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4C11 2.8 9.3 2.5 8.2 3.3 6.6 3.2 5.2 4.4 5.1 6 3.9 6.8 3.5 8.5 4.2 9.9 3.4 11.3 3.7 13.1 5 14c-.1 1.7 1.2 3.2 2.9 3.1.7 1.2 2.3 1.6 4.1 1V4z"/><path d="M12 4c1-1.2 2.7-1.5 3.8-.7 1.6-.1 3 1.1 3.1 2.7 1.2.8 1.6 2.5.9 3.9.8 1.4.5 3.2-.8 4.1.1 1.7-1.2 3.2-2.9 3.1-.7 1.2-2.3 1.6-4.1 1V4z"/><path d="M7.6 8.4c.9-.2 1.7.3 2 1.1M6.9 12.6c.8.1 1.4.6 1.7 1.3M16.4 8.4c-.9-.2-1.7.3-2 1.1M17.1 12.6c-.8.1-1.4.6-1.7 1.3"/></svg>';
+const KTICK='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const kchk=(on,act,lab)=>`<span class="kchk tap${on?' on':''}" data-act="${act}" role="checkbox" aria-checked="${on}" aria-label="${lab}">${KTICK}</span>`;
+/* page shell in the new style (works in both interfaces): scene, scrim, status, header, scroll body, optional bottom bar */
+const kPage=(cls,head,body,bar='')=>{const p=gcPal();return `${menuBg()}<div class="layer nu np ${cls}" style="${nuVars(p)}"><div class="np-scrim"></div>${STATUS}${head}${scroll(body,'padding:4px 16px 0')}${bar?`<div class="kbar">${bar}</div>`:''}</div>`};
+
+/* ---------- §3 first launch: Before you begin (per script) ---------- */
+const KS={m:{h:'learn',k:'learn'}};
+R.kana=()=>{const k=kst(),seg=sc=>`<div class="ns-seg kseg" role="radiogroup" aria-label="${sc==='h'?'Hiragana':'Katakana'}">${[['learn','Learn it'],['some','I know some'],['know','I know it']].map(([m,t])=>`<div class="tap${KS.m[sc]===m?' on':''}" data-act="kmode:${sc}:${m}" role="radio" aria-checked="${KS.m[sc]===m}">${t}</div>`).join('')}</div>`;
+  const card=(sc,g,nm,smp)=>`<section class="kst-card" data-sc="${sc}"><div class="kst-h"><div class="kst-g" lang="ja">${g}</div><div><div class="kst-n">${nm}</div><div class="kst-s" lang="ja">${smp}</div></div></div>${seg(sc)}</section>`;
+  const body=`<div class="kst-step">${k.legacy?'ONE-TIME KANA SETUP':'FIRST LAUNCH'} · 1 OF 2</div><h1 class="kst-t">Before you begin</h1>
+<p class="kst-p">Kanji readings are written in kana. Tell the app what you already know — each script gets its own answer.</p>
+${card('h','あ','Hiragana','あ い う え お')}${card('k','ア','Katakana','ア イ ウ エ オ')}
+<div class="kst-note"><b>No test and no lock-in.</b> “I know it” ticks the whole script on the next screen; nothing is marked until you confirm. You can change any item later on the Mark Known Items page.${k.legacy?' <b>Your kanji and word progress stays open</b> — nothing is locked.':''}</div>`;
+  return kPage('kst','<div style="height:12px"></div>',body,`<div class="nu-btn go tap" data-act="kcont" role="button">Continue</div><div class="kdots"><i class="on"></i><i></i></div>`)};
+/* the long list: every kana of the scripts being set up, row by row; a row name ticks its row */
+const KM={sc:[],sel:new Set()};
+R.kanamark=()=>{const D=kanaData(),grp=(sc,g)=>{const all=g.items.every(it=>KM.sel.has(it.id));
+    return `<div class="kml-gh"><span>${sc==='h'?'HIRAGANA':'KATAKANA'} · ${g.name.toUpperCase()}</span><span class="kml-all tap${all?' on':''}" data-act="krow:${g.key}" role="button" aria-pressed="${all}">ALL ${all?'✓':''}</span></div>
+${g.items.map(it=>`<div class="kml-r" data-id="${it.id}"><span class="kml-g" lang="ja">${it.k}</span><div class="kml-m"><b>${it.ro}</b></div>${kchk(KM.sel.has(it.id),'ktick:'+it.id,'Know '+it.k)}</div>`).join('')}`};
+  const body=KM.sc.map(sc=>`<div class="kml-sc">${sc==='h'?'Hiragana':'Katakana'}</div>${D.table[sc].map(g=>grp(sc,g)).join('')}`).join('');
+  return kPage('kml',nuHdr('Mark what you know','First login · tick what you already know'),`<div class="kml">${body}</div>`,`<div class="nu-btn go tap kml-go" data-act="kdone" role="button">Continue · ${KM.sel.size} ticked</div>`)};
+function kanaFinish(){const k=kst();k.h=KS.m.h;k.k=KS.m.k;k.setup=1;srsSave();S.modal=null;home()}
+
+/* ---------- §8 Home: the kana banner (only addition) ---------- */
+function kanaBanner(){if(!kanaOn()||(kanaComplete('h')&&kanaComplete('k')))return '';const ph=kanaPct('h'),pk=kanaPct('k');
+  return `<div class="gc-kana" role="status" aria-label="Kana track: Hiragana ${ph}%, Katakana ${pk}%"><span class="gck-g" lang="ja">${ph<100?'あ':'ア'}</span><div class="gck-t"><div class="gck-1">Kana track · Hiragana ${ph}% · Katakana ${pk}%</div><div class="gck-2">${gateOpen()?'Your kanji stays open meanwhile':'Kanji opens when both scripts are complete'}</div></div></div>`}
+
+/* ---------- §4 Sets: Hiragana / Katakana sections above the kanji sets; each row is a pack ---------- */
+SF.open.KH=true;
+function kanaSetsHtml(){if(!kanaOn()||SF.g!=='all'||SF.f==='lock')return '';let i=0;
+  return [['h','KH','Hiragana'],['k','KK','Katakana']].map(([sc,g,nm])=>{const P=kanaData().packs.filter(p=>p.sc===sc&&(SF.f!=='prog'||kanaPackPct(p)<100)),o=!!SF.open[g],pct=kanaPct(sc);
+    if(!P.length)return '';
+    const tile=p=>{const v=kanaPackPct(p);return `<div class="nsc tap kpk" data-act="kpack:${p.key}" data-pack="${p.key}" style="--i:${i++}" role="button" aria-label="${nm} pack: ${p.name}, ${v}%"><div class="nsc-k" lang="ja">${p.chars[0].k}</div><div class="nsc-n">${p.name}</div>${nuBar(v,'acc')}<div class="nsc-p">${v}% · ${p.words.length} word${p.words.length===1?'':'s'}</div></div>`};
+    return `<div class="nsgr${o?' open':''}" data-grade="${g}"><div class="nsgh tap" data-act="sgo:${g}" role="button" aria-expanded="${o}"><div><div class="nsgh-t">${nm}</div><div class="nsgh-s">Foundations · ${P.length} packs · ${pct?pct+'% complete':'not started'}</div></div>${NU_CHEV}</div>
+<div class="ns-bw"><div class="ns-bd"><div class="nsg">${P.map(tile).join('')}</div></div></div></div>`}).join('')}
+/* a pack: its sounds and words with their state */
+const kState=id=>isKnown(id)?'Known':stage(id)>=MASTERED?'Mastered':stage(id)?'Stage '+stage(id):'New';
+R.kpack=()=>{const p=kanaData().byPack[S.kpack]||kanaData().packs[0];
+  const row=it=>`<div class="kn-r"><span class="kn-g${it.t==='n'?'':' w'}" lang="ja">${it.k}</span><div class="kn-m"><b>${it.t==='n'?it.ro:escH(it.m)}</b><span>${it.t==='n'?(it.sc==='k'?`<span lang="ja">${it.r}</span> · `:'')+'sound':'word'}</span></div><span class="kn-st${isKnown(it.id)?' kn':''}">${kState(it.id)}</span></div>`;
+  return kPage('kpk',nuHdr(p.name,`${p.script} · ${p.chars.length} characters · ${p.words.length} words`),`<div class="nm-card kn-card">${p.chars.map(row).join('')}${p.words.length?`<div class="kn-sh">WORDS</div>${p.words.map(row).join('')}`:''}</div><div class="nsn">Pack items come up in Study and Review with your other items. Kana use the 5-step kana schedule; words use the normal one.</div>`)};
+
+/* ---------- §10 Summary: Foundations card + §9 window at the bottom ---------- */
+function kanaFoundCard(){if(kst().skip)return '';const D=kanaData();
+  const row=(sc,g,nm)=>{const L=D.chars[sc],l=L.filter(it=>stage(it.id)>=1).length,m=L.filter(it=>stage(it.id)>=MASTERED).length,kn=L.filter(it=>isKnown(it.id)).length,p=kanaPct(sc);
+    return `<div class="nm-row" data-script="${sc}"><div class="nm-rh"><span class="nm-rn"><span lang="ja">${g}</span> ${nm}</span>${nuBar(p,'acc')}<span class="nm-rp">${p>=100?'✓':p+'%'}</span></div><div class="nm-cap">${l||m||kn?`${l} learned · ${m} mastered · ${kn} known`:'Not started'} · 5-step schedule</div></div>`};
+  return `<div class="nm-card kn-found"><div class="nm-h">Foundations</div>${row('h','あ','Hiragana')}${row('k','ア','Katakana')}</div>`}
+function kanaKnownWin(){const n=Object.keys(SR.known||{}).length;
+  return `<div class="nm-card kn-win"><div class="nm-h">Already know some items?</div><div class="nm-p">Mark items you already know as <b>Known</b>: they skip Study and Review, still count as complete, and you can undo it on the same page.${n?` You have <b>${n}</b> item${n===1?'':'s'} marked known.`:''}</div><div class="nu-btn go tap" data-act="go:known" role="button">Mark known items ›</div></div>`}
+
+/* ---------- §9 Mark Known Items: Sets-style tiers (only the ones the user can open), each an endless scroll in order ---------- */
+const KN={open:{},want:{}};
+function knTiers(){const t=[];const D=kanaData();
+  for(const [sc,g,nm] of [['h','KH','Hiragana'],['k','KK','Katakana']])t.push({g,nm,sub:'Foundations · 11 packs',groups:D.packs.filter(p=>p.sc===sc).map(p=>({key:p.key,name:p.name,items:p.items}))});
+  if(gateOpen()){const own=[...S.owned].filter(n=>SETITEMS[n]).sort((a,b)=>a-b);if(own.length)t.push({g:'N5',nm:GNAME.N5,sub:`${GRADE_LINE.N5} · ${own.length} set${own.length===1?'':'s'}`,groups:own.map(n=>({key:'s'+n,name:`Set ${n} · ${BANK.TITLES[n]}`,items:SETITEMS[n]}))})}
+  return t}
+const knWant=id=>id in KN.want?KN.want[id]:isKnown(id);
+function knCounts(){let a=0,u=0;for(const id in KN.want){if(KN.want[id]&&!isKnown(id))a++;else if(!KN.want[id]&&isKnown(id))u++}return [a,u]}
+function knLabel(){const [a,u]=knCounts();return a&&u?`Mark ${a} · unmark ${u}`:a?`Mark ${a} as known`:u?`Unmark ${u}`:'Tick items to mark them known'}
+const knSub=it=>it.t==='n'?`${it.sc==='h'?'Hiragana':'Katakana'}${it.sc==='k'?` · <span lang="ja">${it.r}</span>`:''}`:it.t==='k'?`<span lang="ja">${[it.kun?kana(it.kun):'',...(it.on||[])].filter(Boolean).join(' · ')}</span>`:`<span lang="ja">${it.r}</span> · word`;
+R.known=()=>{const T=knTiers();
+  const row=it=>`<div class="kn-r" data-id="${it.id}"><span class="kn-g${it.t==='k'||it.t==='n'&&it.k.length<2?'':' w'}" lang="ja">${it.k}</span><div class="kn-m"><b>${it.t==='n'?it.ro:escH(it.m)}</b><span>${knSub(it)}${isKnown(it.id)?' · <i>Known</i>':''}</span></div>${kchk(knWant(it.id),'kntick:'+it.id,'Known: '+it.k)}</div>`;
+  const tier=x=>{const o=!!KN.open[x.g],n=x.groups.reduce((a,g)=>a+g.items.length,0);
+    return `<div class="nsgr kn-t${o?' open':''}" data-grade="${x.g}"><div class="nsgh tap" data-act="kntier:${x.g}" role="button" aria-expanded="${o}"><div><div class="nsgh-t">${x.nm}</div><div class="nsgh-s">${x.sub} · ${n} items</div></div>${NU_CHEV}</div>
+<div class="ns-bw"><div class="ns-bd">${o?`<div class="kn-list">${x.groups.map(g=>`<div class="kml-gh"><span>${g.name.toUpperCase()}</span><span class="kml-all tap" data-act="kngrp:${g.key}" role="button">ALL ✓</span></div>${g.items.map(row).join('')}`).join('')}</div>`:''}</div></div></div>`};
+  const [a,u]=knCounts();
+  return kPage('kn',nuHdr('Mark known items','Tick anything you already know'),`<p class="kn-note">Only the tiers you can open appear here. Known items skip Study and Review and count as complete; untick a Known item to send it back to New.</p>${T.map(tier).join('')}`,
+    `<div class="nu-btn go tap kn-go${a||u?'':' dis'}" data-act="knapply" role="button" aria-disabled="${!(a||u)}">${knLabel()}</div>`)};
+function knSync(){const b=document.querySelector('#scr .kn-go');if(!b)return;const [a,u]=knCounts();b.textContent=knLabel();b.classList.toggle('dis',!(a||u));b.setAttribute('aria-disabled',!(a||u))}
+const knGroup=key=>{for(const t of knTiers())for(const g of t.groups)if(g.key===key)return g;return null};
+
+/* ---------- §9 Study card: brain button (top-left, across from the stroke-order pill) ---------- */
+function kbrainBtn(it){return isKnown(it.id)?'':`<div class="gc-round sm stbrain tap" data-act="kbrain" role="button" aria-label="Mark as known">${KBRAIN}</div>`}
+const studyItem=()=>{const c=S.card;return c&&(c.list?ITEMS[c.list[c.i]]:(SETITEMS[c.set]||[])[c.i])};
+
+/* ---------- actions ---------- */
+const _actK=act;
+act=function(a){const [k,v]=a.split(/:(.*)/s);if(S.art&&k!=='art')return _actK(a);
+  switch(k){
+  case 'go':if(v==='home'&&S.screen==='title'&&kanaNeedsSetup()){KS.m={h:'learn',k:'learn'};go('kana');return}if(v==='known'){KN.want={};KN.open={}}break;
+  case 'kmode':{const [sc,m]=v.split(':');KS.m[sc]=m;render();return}
+  case 'kcont':{const L=['h','k'].filter(sc=>KS.m[sc]!=='learn');if(!L.length){kanaFinish();return}
+    KM.sc=L;KM.sel=new Set(L.filter(sc=>KS.m[sc]==='know').flatMap(sc=>kanaData().chars[sc].map(it=>it.id)));go('kanamark');return}
+  case 'ktick':{KM.sel.has(v)?KM.sel.delete(v):KM.sel.add(v);render();return}
+  case 'krow':{const g=kanaData().table[v.split('-')[0]].find(x=>x.key===v);if(!g)return;const all=g.items.every(it=>KM.sel.has(it.id));g.items.forEach(it=>all?KM.sel.delete(it.id):KM.sel.add(it.id));render();return}
+  case 'kdone':{const n=KM.sel.size;modal(n?`Mark ${n} item${n===1?'':'s'} as known?`:'Nothing ticked',
+      `<div class="kdlg"><span class="gc-round sm kdlg-ic">${KBRAIN}</span><p>${n?'Known items <b>will not show up in Study or Review</b> — the app treats them as already learned. Anything you left unticked enters your Study queue on the normal schedule.':'Every kana in this list will come up in Study on the normal schedule.'} You can change this later on the Mark Known Items page.</p></div>`,
+      [['out','Cancel','closeModal'],['wh','Confirm','kconfirm']]);return}
+  case 'kconfirm':{kmark([...KM.sel]);kanaFinish();return}
+  case 'kpack':S.kpack=v;go('kpack');return;
+  case 'kbrain':{const it=studyItem();if(!it||isKnown(it.id))return;modal(`Mark ${escH(it.k)} as known?`,
+      `<div class="kdlg"><span class="gc-round sm kdlg-ic">${KBRAIN}</span><p>This marks the item as known. It will be <b>removed from the Study and Review queues</b> and counts as complete. You can unmark it later on the Mark Known Items page.</p></div>`,
+      [['out','Cancel','closeModal'],['wh','Confirm','kbrainok']]);return}
+  case 'kbrainok':{const c=S.card,it=studyItem();S.modal=null;if(!it){render();return}kmark([it.id]);
+    if(c.list){const i=c.i;c.list.splice(i,1);c.seen=new Set([...c.seen].filter(x=>x!==i).map(x=>x>i?x-1:x));c.flip=false;
+      if(!c.list.length){home();toast('Marked known · nothing left in this session');return}if(c.i>=c.list.length)c.i=c.list.length-1}
+    toast(`Marked ${it.k} as known`);return}
+  case 'kntier':{KN.open[v]=!KN.open[v];render();return}
+  case 'kntick':{KN.want[v]=!knWant(v);if(KN.want[v]===isKnown(v))delete KN.want[v];const r=document.querySelector(`#scr .kn-r[data-id="${v}"] .kchk`);
+    if(r){const on=knWant(v);r.classList.toggle('on',on);r.setAttribute('aria-checked',on)}knSync();return}
+  case 'kngrp':{const g=knGroup(v);if(!g)return;const all=g.items.every(it=>knWant(it.id));
+    g.items.forEach(it=>{KN.want[it.id]=!all;if(KN.want[it.id]===isKnown(it.id))delete KN.want[it.id];const r=document.querySelector(`#scr .kn-r[data-id="${it.id}"] .kchk`);if(r){r.classList.toggle('on',!all);r.setAttribute('aria-checked',!all)}});knSync();return}
+  case 'knapply':{const add=[],rem=[];for(const id in KN.want){if(KN.want[id]&&!isKnown(id))add.push(id);else if(!KN.want[id]&&isKnown(id))rem.push(id)}if(!add.length&&!rem.length)return;
+    kmark(add);kunmark(rem);KN.want={};toast(add.length&&rem.length?`Marked ${add.length} · unmarked ${rem.length}`:add.length?`Marked ${add.length} as known`:`Unmarked ${rem.length} · back to New`);return}
+  }
+  return _actK(a)};
+window.__act=act;window.__KD=()=>kanaData();window.__kst=kst;window.__gateOpen=gateOpen;window.__isKnown=isKnown;window.__newItems=()=>newItems().map(it=>it.id);window.__dueList=()=>dueList().map(it=>it.id);
+window.__KM=KM;window.__KS=KS;window.__KN=KN;
+window.__srsLearn=srsLearn;window.__srsGrade=srsGrade;
 </script></body></html>
