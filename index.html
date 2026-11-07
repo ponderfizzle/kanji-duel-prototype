@@ -754,7 +754,7 @@ body.kbl #phone #tin.gcu .tin-idk.gn.hold{flex:.8 1 0!important;margin-right:0;p
 .kchk{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;position:relative;color:transparent}
 .kchk::before{content:'';position:absolute;left:5px;top:5px;width:30px;height:30px;border-radius:9px;border:2px solid rgba(255,255,255,.5);box-sizing:border-box}
 .kchk svg{position:relative;width:20px;height:20px;margin:-4px 0 0 -4px}
-.kchk.on{color:var(--gc-deep)}.kchk.on::before{background:var(--gc-accent);border-color:var(--gc-accent)}
+.kchk.on{color:var(--kchk-fg,var(--gc-deep))}.kchk.on::before{background:var(--kchk-bg,var(--gc-accent));border-color:var(--kchk-bg,var(--gc-accent))}
 /* dialog body (brain + text) inside the app's modal */
 .kdlg{text-align:left}.kdlg p{margin:0}
 .kdlg .kdlg-ic{display:flex;margin:0 auto 12px;width:46px;height:46px}
@@ -3140,7 +3140,7 @@ R.weakitems=()=>{const pk=weakPick();
 ${open?`<div style="padding-bottom:4px">${rows.map(wrow).join('')}</div>`:''}</div>`};
   const wwin=(kind,title)=>{const n=GRADES.reduce((a,[c])=>a+gradeWeakT(c,kind).length,0);return `<div class="panel wwin" data-kind="${kind}" style="margin-top:16px;padding:6px 14px 6px"><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span class="px" style="font-size:15px;color:var(--h1)">${title}</span><span class="tag" style="font-size:14px;padding:2px 8px">${n}</span></div>${GRADES.map(g=>wsec(kind,g)).join('')}</div>`};
   return `${menuBg()}<div class="layer">${STATUS}${hdr('Weak Items','苦手')}
-${scroll(`<div class="panel" style="margin-top:14px;padding:10px 14px;font-size:14px;color:var(--mut);line-height:1.4">Tick the sets to practice. Weak = under 75% right on the reading or the meaning (after 4+ answers).</div>${wwin('k','WEAK KANJI')}${wwin('v','WEAK VOCAB')}`,'padding:4px 18px 0')}
+${scroll(`<div class="panel" style="margin-top:14px;padding:10px 14px;font-size:14px;color:var(--mut);line-height:1.4">Select the sets to practice. Weak = under 75% right on the reading or the meaning (after 4+ answers).</div>${wwin('k','WEAK KANJI')}${wwin('v','WEAK VOCAB')}`,'padding:4px 18px 0')}
 ${barBtn('wpbtn',pk.t,pk.n,pk.dis,'weak','練')}</div>`};
 R.mastered=()=>{const K=masteredT('k'),V=masteredT('v'),tot=K.length+V.length,n=(MM.sel.k?K.length:0)+(MM.sel.v?V.length:0);
   const mrow=it=>{const p=pRec(it.id);return itemRow(it,`<div class="mseen" style="font-size:14px;color:var(--txt)">Last seen <b>${agoTxt(lastSeen(it.id))}</b></div><div class="mago" style="font-size:13px;color:var(--mut)">Mastered ${agoTxt(p.mastered||p.last||0)}</div>`)};
@@ -3151,16 +3151,16 @@ ${open?L.map(mrow).join(''):''}</div>`};
     return `<div class="panel mwin" data-kind="${kind}" style="margin-top:16px;padding:4px 14px ${open?6:4}px"><div style="display:flex;align-items:center;gap:12px;min-height:52px">${chkbox(sel,dis,'msel:'+kind,title)}
 <div class="${dis?'':'tap'}" ${dis?'':`data-act="mopen:${kind}" role="button" aria-expanded="${open}"`} style="flex:1;display:flex;align-items:center;gap:10px;min-height:44px"><span class="px" style="font-size:15px;color:var(--h1);opacity:${dis?.55:1}">${title}</span><span class="tag" style="font-size:14px;padding:2px 8px">${c}</span><span style="flex:1"></span>${dis?'':chev(open)}</div></div>
 ${open?GRADES.map(g=>gsec(kind,g,rows)).join(''):''}</div>`};
-  const intro=tot?`<b>Mastered</b> = items you've moved through all 9 stages and now know well. Tick kanji, vocab or both and press <b>Re-master</b> to refresh the ones you haven't seen in a while (longest unseen first).`
+  const intro=tot?`<b>Mastered</b> = items you've moved through all 9 stages and now know well. Select kanji, vocab or both and press <b>Re-master</b> to refresh the ones you haven't seen in a while (longest unseen first).`
    :`<b>No mastered items yet.</b> An item is Mastered after Stage 9. Keep reviewing and they will show up here.`;
   return `${menuBg()}<div class="layer">${STATUS}${hdr('Mastered','習得')}
 ${scroll(`<div class="panel mintro" style="margin-top:14px;padding:10px 14px;font-size:14px;color:var(--txt);line-height:1.45">${intro}</div>${sec('k','MASTERED KANJI',K)}${sec('v','MASTERED VOCAB',V)}`,'padding:4px 18px 0')}
-${barBtn('rmbtn',!tot?'Nothing to re-master':n?'Re-master':'Tick something to re-master',n,!n,'rmopen','復')}${MM.sheet?rmSheet():''}</div>`};
+${barBtn('rmbtn',!tot?'Nothing to re-master':n?'Re-master':'Select something to re-master',n,!n,'rmopen','復')}${MM.sheet?rmSheet():''}</div>`};
 function rmSheet(){const pool=remasterPool().length,v=pkVal('rm',pool),ty=PK.typing==='rm';
   const chips=`<div style="display:flex;gap:10px;margin-top:12px">${[['old','Longest unseen'],['rnd','Random mix']].map(([k,t])=>`<div class="chip tap rmorder${MM.order===k?' on':''}" data-act="rmorder:${k}" role="radio" aria-checked="${MM.order===k}" style="font-size:12px;height:40px">${t}</div>`).join('')}</div>`;
   return `<div class="dim" data-act="rmcancel" style="position:absolute;inset:0;background:rgba(10,8,18,.6);z-index:40"></div><div class="panel rmsheet" role="dialog" aria-label="Re-master" style="position:absolute;left:12px;right:12px;bottom:24px;z-index:41;padding:14px 16px 6px">
 <div class="px" style="font-size:15px;color:var(--h1)">RE-MASTER</div>
-<div style="font-size:15px;line-height:1.45;margin-top:10px;color:var(--txt)">How many items? From your <b>${pool}</b> ticked mastered items${MM.order==='old'?', the ones you haven\'t seen for the longest first':', picked at random'}.</div>
+<div style="font-size:15px;line-height:1.45;margin-top:10px;color:var(--txt)">How many items? From your <b>${pool}</b> selected mastered items${MM.order==='old'?', the ones you haven\'t seen for the longest first':', picked at random'}.</div>
 ${chips}<div style="display:flex;justify-content:center;margin:16px 0 0">${stepper('rm',pool)}</div><div style="text-align:center">${pkHelp('rm',pool,true)}</div>
 <div style="font-size:14px;color:var(--mut);margin-top:12px;line-height:1.4;border-top:2px solid var(--line);padding-top:10px">Practice only: just each item's "last seen" time is updated. Stages, review dates and counts don't change, and a miss has no lasting effect.</div>
 <div style="display:flex;gap:14px;margin:16px 0 14px"><div class="btn wh" style="flex:1;height:54px;font-size:16px" data-act="rmcancel">Cancel</div><div class="btn gold rmstart" style="flex:1;height:54px;font-size:16px" data-act="rmstart">Start</div></div></div>`}
@@ -4021,11 +4021,17 @@ function kmark(ids,t=clockNow()){SR.known=SR.known||{};for(const id of ids){if(!
 function kunmark(ids){if(!SR.known)return;for(const id of ids)delete SR.known[id];srsSave()}
 const kanaPackPct=p=>Math.floor(p.items.filter(it=>kDone(it.id)).length/Math.max(1,p.items.length)*100);
 const kanaPackName=key=>{const p=kanaData().byPack[key];return p?`${p.script} · ${p.name}`:key};
-const KBRAIN='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4C11 2.8 9.3 2.5 8.2 3.3 6.6 3.2 5.2 4.4 5.1 6 3.9 6.8 3.5 8.5 4.2 9.9 3.4 11.3 3.7 13.1 5 14c-.1 1.7 1.2 3.2 2.9 3.1.7 1.2 2.3 1.6 4.1 1V4z"/><path d="M12 4c1-1.2 2.7-1.5 3.8-.7 1.6-.1 3 1.1 3.1 2.7 1.2.8 1.6 2.5.9 3.9.8 1.4.5 3.2-.8 4.1.1 1.7-1.2 3.2-2.9 3.1-.7 1.2-2.3 1.6-4.1 1V4z"/><path d="M7.6 8.4c.9-.2 1.7.3 2 1.1M6.9 12.6c.8.1 1.4.6 1.7 1.3M16.4 8.4c-.9-.2-1.7.3-2 1.1M17.1 12.6c-.8.1-1.4.6-1.7 1.3"/></svg>';
+/* v56d (Derek 2026-11-07): the mark-as-known icon is a double check (was a brain) */
+const KICON='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 12l5 5l10 -10"/><path d="M2 12l5 5m5 -5l5 -5"/></svg>';
 const KTICK='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const kchk=(on,act,lab)=>`<span class="kchk tap${on?' on':''}" data-act="${act}" role="checkbox" aria-checked="${on}" aria-label="${lab}">${KTICK}</span>`;
 /* page shell in the new style (works in both interfaces): scene, scrim, status, header, scroll body, optional bottom bar */
-const kPage=(cls,head,body,bar='')=>{const p=gcPal();return `${menuBg()}<div class="layer nu np ${cls}" style="${nuVars(p)}"><div class="np-scrim"></div>${STATUS}${head}${scroll(body,'padding:4px 16px 0')}${bar?`<div class="kbar">${bar}</div>`:''}</div>`};
+/* v56e (Derek 2026-11-07): a checked box is the scene accent with a dark check, unless the accent is hard to see on the scene card
+   (contrast under 3:1, the usual minimum for controls) - then a white box with a black check, matching the white text. */
+const kLum=h=>{const c=[1,3,5].map(i=>parseInt(h.substr(i,2),16)/255).map(v=>v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4));return .2126*c[0]+.7152*c[1]+.0722*c[2]};
+const kContrast=(a,b)=>{const x=kLum(a),y=kLum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const kChkVars=p=>kContrast(p[3],p[1])>=3?`;--kchk-bg:${p[3]};--kchk-fg:${p[0]}`:';--kchk-bg:#fff;--kchk-fg:#000';
+const kPage=(cls,head,body,bar='')=>{const p=gcPal();return `${menuBg()}<div class="layer nu np ${cls}" style="${nuVars(p)}${kChkVars(p)}"><div class="np-scrim"></div>${STATUS}${head}${scroll(body,'padding:4px 16px 0')}${bar?`<div class="kbar">${bar}</div>`:''}</div>`};
 
 /* ---------- §3 first launch: Before you begin (per script) ---------- */
 const KS={m:{h:'learn',k:'learn'}};
@@ -4034,7 +4040,7 @@ R.kana=()=>{const k=kst(),seg=sc=>`<div class="ns-seg kseg" role="radiogroup" ar
   const body=`<div class="kst-step">${k.legacy?'ONE-TIME KANA SETUP':'FIRST LAUNCH'} · 1 OF 2</div><h1 class="kst-t">Before you begin</h1>
 <p class="kst-p">Kanji readings are written in kana. Tell the app what you already know — each script gets its own answer.</p>
 ${card('h','あ','Hiragana','あ い う え お')}${card('k','ア','Katakana','ア イ ウ エ オ')}
-<div class="kst-note"><b>No test and no lock-in.</b> “I know it” ticks the whole script on the next screen; nothing is marked until you confirm. You can change any item later on the Mark Known Items page.${k.legacy?' <b>Your kanji and word progress stays open</b> — nothing is locked.':''}</div>`;
+<div class="kst-note"><b>No test and no lock-in.</b> “I know it” selects the whole script on the next screen; nothing is marked until you confirm. You can change any item later on the Mark Known Items page.${k.legacy?' <b>Your kanji and word progress stays open</b> — nothing is locked.':''}</div>`;
   return kPage('kst','<div style="height:12px"></div>',body,`<div class="nu-btn go tap" data-act="kcont" role="button">Continue</div><div class="kdots"><i class="on"></i><i></i></div>`)};
 /* the long list: every kana of the scripts being set up, row by row; a row name ticks its row */
 const KM={sc:[],sel:new Set()};
@@ -4042,7 +4048,7 @@ R.kanamark=()=>{const D=kanaData(),grp=(sc,g)=>{const all=g.items.every(it=>KM.s
     return `<div class="kml-gh"><span>${sc==='h'?'HIRAGANA':'KATAKANA'} · ${g.name.toUpperCase()}</span><span class="kml-all tap${all?' on':''}" data-act="krow:${g.key}" role="button" aria-pressed="${all}">ALL ${all?'✓':''}</span></div>
 <div class="nm-card kml-card">${g.items.map(it=>`<div class="kml-r" data-id="${it.id}"><span class="kml-g" lang="ja">${it.k}</span><div class="kml-m"><b>${it.ro}</b></div>${kchk(KM.sel.has(it.id),'ktick:'+it.id,'Know '+it.k)}</div>`).join('')}</div>`};
   const body=KM.sc.map(sc=>`<div class="kml-sc">${sc==='h'?'Hiragana':'Katakana'}</div>${D.table[sc].map(g=>grp(sc,g)).join('')}`).join('');
-  return kPage('kml',nuHdr('Mark what you know','First login · tick what you already know'),`<div class="kml">${body}</div>`,`<div class="nu-btn go tap kml-go" data-act="kdone" role="button">Continue · ${KM.sel.size} selected</div>`)};
+  return kPage('kml',nuHdr('Mark what you know','First login · select what you already know'),`<div class="kml">${body}</div>`,`<div class="nu-btn go tap kml-go" data-act="kdone" role="button">Continue · ${KM.sel.size} selected</div>`)};
 function kanaFinish(){const k=kst();k.h=KS.m.h;k.k=KS.m.k;k.setup=1;srsSave();S.modal=null;home()}
 
 /* ---------- §8 Home: the kana banner (only addition) ---------- */
@@ -4079,7 +4085,7 @@ function knTiers(){const t=[];const D=kanaData();
   return t}
 const knWant=id=>id in KN.want?KN.want[id]:isKnown(id);
 function knCounts(){let a=0,u=0;for(const id in KN.want){if(KN.want[id]&&!isKnown(id))a++;else if(!KN.want[id]&&isKnown(id))u++}return [a,u]}
-function knLabel(){const [a,u]=knCounts();return a&&u?`Mark ${a} · unmark ${u}`:a?`Mark ${a} as known`:u?`Unmark ${u}`:'Tick items to mark them known'}
+function knLabel(){const [a,u]=knCounts();return a&&u?`Mark ${a} · unmark ${u}`:a?`Mark ${a} as known`:u?`Unmark ${u}`:'Select items to mark them known'}
 const knSub=it=>it.t==='n'?`${it.sc==='h'?'Hiragana':'Katakana'}${it.sc==='k'?` · <span lang="ja">${it.r}</span>`:''}`:it.t==='k'?`<span lang="ja">${[it.kun?kana(it.kun):'',...(it.on||[])].filter(Boolean).join(' · ')}</span>`:`<span lang="ja">${it.r}</span> · word`;
 R.known=()=>{const T=knTiers();
   const row=it=>`<div class="kn-r" data-id="${it.id}"><span class="kn-g${it.t==='k'||it.t==='n'&&it.k.length<2?'':' w'}" lang="ja">${it.k}</span><div class="kn-m"><b>${it.t==='n'?it.ro:escH(it.m)}</b><span>${knSub(it)}${isKnown(it.id)?' · <i>Known</i>':''}</span></div>${kchk(knWant(it.id),'kntick:'+it.id,'Known: '+it.k)}</div>`;
@@ -4087,13 +4093,13 @@ R.known=()=>{const T=knTiers();
     return `<div class="nsgr kn-t${o?' open':''}" data-grade="${x.g}"><div class="nsgh tap" data-act="kntier:${x.g}" role="button" aria-expanded="${o}"><div><div class="nsgh-t">${x.nm}</div><div class="nsgh-s">${x.sub} · ${n} items</div></div>${NU_CHEV}</div>
 <div class="ns-bw"><div class="ns-bd">${o?`<div class="kn-list">${x.groups.map(g=>`<div class="kml-gh"><span>${g.name.toUpperCase()}</span><span class="kml-all tap" data-act="kngrp:${g.key}" role="button">ALL ✓</span></div><div class="nm-card kml-card">${g.items.map(row).join('')}</div>`).join('')}</div>`:''}</div></div></div>`};
   const [a,u]=knCounts();
-  return kPage('kn',nuHdr('Mark known items','Tick anything you already know'),`<p class="kn-note">Only the tiers you can open appear here. Known items skip Study and Review and count as complete; untick a Known item to send it back to New.</p>${T.map(tier).join('')}`,
+  return kPage('kn',nuHdr('Mark known items','Tick anything you already know'),`<p class="kn-note">Only the tiers you can open appear here. Known items skip Study and Review and count as complete; deselect a Known item to send it back to New.</p>${T.map(tier).join('')}`,
     `<div class="nu-btn go tap kn-go${a||u?'':' dis'}" data-act="knapply" role="button" aria-disabled="${!(a||u)}">${knLabel()}</div>`)};
 function knSync(){const b=document.querySelector('#scr .kn-go');if(!b)return;const [a,u]=knCounts();b.textContent=knLabel();b.classList.toggle('dis',!(a||u));b.setAttribute('aria-disabled',!(a||u))}
 const knGroup=key=>{for(const t of knTiers())for(const g of t.groups)if(g.key===key)return g;return null};
 
 /* ---------- §9 Study card: brain button (top-left, across from the stroke-order pill) ---------- */
-function kbrainBtn(it){return isKnown(it.id)?'':`<div class="gc-round sm stbrain tap" data-act="kbrain" role="button" aria-label="Mark as known">${KBRAIN}</div>`}
+function kbrainBtn(it){return isKnown(it.id)?'':`<div class="gc-round sm stbrain tap" data-act="kbrain" role="button" aria-label="Mark as known">${KICON}</div>`}
 const studyItem=()=>{const c=S.card;return c&&(c.list?ITEMS[c.list[c.i]]:(SETITEMS[c.set]||[])[c.i])};
 
 /* ---------- actions ---------- */
@@ -4107,12 +4113,12 @@ act=function(a){const [k,v]=a.split(/:(.*)/s);if(S.art&&k!=='art')return _actK(a
   case 'ktick':{KM.sel.has(v)?KM.sel.delete(v):KM.sel.add(v);render();return}
   case 'krow':{const g=kanaData().table[v.split('-')[0]].find(x=>x.key===v);if(!g)return;const all=g.items.every(it=>KM.sel.has(it.id));g.items.forEach(it=>all?KM.sel.delete(it.id):KM.sel.add(it.id));render();return}
   case 'kdone':{const n=KM.sel.size;modal(n?`Mark ${n} item${n===1?'':'s'} as known?`:'Nothing selected',
-      `<div class="kdlg"><span class="gc-round sm kdlg-ic">${KBRAIN}</span><p>${n?'Known items <b>will not show up in Study or Review</b> — the app treats them as already learned. Anything you left unticked enters your Study queue on the normal schedule.':'Every kana in this list will come up in Study on the normal schedule.'} You can change this later on the Mark Known Items page.</p></div>`,
+      `<div class="kdlg"><span class="gc-round sm kdlg-ic">${KICON}</span><p>${n?'Known items <b>will not show up in Study or Review</b> — the app treats them as already learned. Anything you did not select enters your Study queue on the normal schedule.':'Every kana in this list will come up in Study on the normal schedule.'} You can change this later on the Mark Known Items page.</p></div>`,
       [['out','Cancel','closeModal'],['wh','Confirm','kconfirm']]);return}
   case 'kconfirm':{kmark([...KM.sel]);kanaFinish();return}
   case 'kpack':S.kpack=v;go('kpack');return;
   case 'kbrain':{const it=studyItem();if(!it||isKnown(it.id))return;modal(`Mark ${escH(it.k)} as known?`,
-      `<div class="kdlg"><span class="gc-round sm kdlg-ic">${KBRAIN}</span><p>This marks the item as known. It will be <b>removed from the Study and Review queues</b> and counts as complete. You can unmark it later on the Mark Known Items page.</p></div>`,
+      `<div class="kdlg"><span class="gc-round sm kdlg-ic">${KICON}</span><p>This marks the item as known. It will be <b>removed from the Study and Review queues</b> and counts as complete. You can unmark it later on the Mark Known Items page.</p></div>`,
       [['out','Cancel','closeModal'],['wh','Confirm','kbrainok']]);return}
   case 'kbrainok':{const c=S.card,it=studyItem();S.modal=null;if(!it){render();return}kmark([it.id]);
     if(c.list){const i=c.i;c.list.splice(i,1);c.seen=new Set([...c.seen].filter(x=>x!==i).map(x=>x>i?x-1:x));c.flip=false;
