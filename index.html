@@ -747,7 +747,7 @@ body.kbl #phone #tin.gcu .tin-idk.gn.hold{flex:.8 1 0!important;margin-right:0;p
 /* first-login long list (spacious: tall rows, big glyphs and tick boxes, air between row groups) */
 .kml-sc{font-size:24px;font-weight:850;margin:14px 2px 2px}
 .kml-gh{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;font-weight:900;letter-spacing:.12em;color:rgba(255,255,255,.65);margin:22px 2px 4px}
-.kml-all{letter-spacing:.02em;color:var(--gc-accent);font-size:13px;min-height:36px;min-width:64px;display:flex;align-items:center;justify-content:flex-end;padding:0 2px}
+.kml-all{letter-spacing:.02em;color:var(--kchk-txt,var(--gc-accent));font-size:13px;min-height:36px;min-width:64px;display:flex;align-items:center;justify-content:flex-end;padding:0 2px}
 .kml-r,.kn-r{display:flex;align-items:center;gap:14px;padding:10px 4px;min-height:64px;border-bottom:1px solid rgba(255,255,255,.13)}
 .kml-g{font-family:'Shippori Mincho B1','Noto Serif CJK JP',serif;font-size:32px;font-weight:800;width:56px;text-align:center;line-height:1.15}
 .kml-m{flex:1;min-width:0}.kml-m b{font-size:19px}
@@ -764,11 +764,11 @@ body.kbl #phone #tin.gcu .tin-idk.gn.hold{flex:.8 1 0!important;margin-right:0;p
 .kn-r{min-height:58px;padding:8px 2px}
 .kn-g{font-family:'Shippori Mincho B1','Noto Serif CJK JP',serif;font-size:28px;font-weight:800;min-width:48px;text-align:center;line-height:1.15;flex:none;white-space:nowrap}
 .kn-g.w{font-size:20px;min-width:64px}
-.kn-m{flex:1;min-width:0}.kn-m b{font-size:16px;display:block}.kn-m span{font-size:13px;color:rgba(255,255,255,.65)}.kn-m i{font-style:normal;color:var(--gc-accent);font-weight:700}
+.kn-m{flex:1;min-width:0}.kn-m b{font-size:16px;display:block}.kn-m span{font-size:13px;color:rgba(255,255,255,.65)}.kn-m i{font-style:normal;color:var(--kchk-txt,var(--gc-accent));font-weight:700}
 .kn-card{padding:6px 16px}
 .kn-sh{font-size:12px;font-weight:900;letter-spacing:.12em;color:rgba(255,255,255,.65);margin:14px 0 2px}
 .kn-st{font-size:12px;font-weight:800;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.25);white-space:nowrap}
-.kn-st.kn{background:var(--gc-accent);color:var(--gc-deep)}
+.kn-st.kn{background:var(--kchk-bg,var(--gc-accent));color:var(--kchk-fg,var(--gc-deep))}
 .kn-win{border:1px solid var(--gc-accent);background:color-mix(in srgb,var(--gc-deep) 55%,transparent)!important}
 .kn-win .nu-btn{margin-top:12px;height:48px;font-size:16px}
 /* Study card: brain = a Home round button (accent circle, dark icon), top-left across from the stroke-order pill */
@@ -4027,10 +4027,11 @@ const KTICK='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke=
 const kchk=(on,act,lab)=>`<span class="kchk tap${on?' on':''}" data-act="${act}" role="checkbox" aria-checked="${on}" aria-label="${lab}">${KTICK}</span>`;
 /* page shell in the new style (works in both interfaces): scene, scrim, status, header, scroll body, optional bottom bar */
 /* v56e (Derek 2026-11-07): a checked box is the scene accent with a dark check, unless the accent is hard to see on the scene card
-   (contrast under 3:1, the usual minimum for controls) - then a white box with a black check, matching the white text. */
+   (contrast under 3:1, the usual minimum for controls) - then a white box with a black check, matching the white text.
+   v56f (Derek): the same rule for the accent text in the lists (ALL, Known): white on those schemes. */
 const kLum=h=>{const c=[1,3,5].map(i=>parseInt(h.substr(i,2),16)/255).map(v=>v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4));return .2126*c[0]+.7152*c[1]+.0722*c[2]};
 const kContrast=(a,b)=>{const x=kLum(a),y=kLum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
-const kChkVars=p=>kContrast(p[3],p[1])>=3?`;--kchk-bg:${p[3]};--kchk-fg:${p[0]}`:';--kchk-bg:#fff;--kchk-fg:#000';
+const kChkVars=p=>kContrast(p[3],p[1])>=3?`;--kchk-bg:${p[3]};--kchk-fg:${p[0]}`:';--kchk-bg:#fff;--kchk-fg:#000;--kchk-txt:#fff';
 const kPage=(cls,head,body,bar='')=>{const p=gcPal();return `${menuBg()}<div class="layer nu np ${cls}" style="${nuVars(p)}${kChkVars(p)}"><div class="np-scrim"></div>${STATUS}${head}${scroll(body,'padding:4px 16px 0')}${bar?`<div class="kbar">${bar}</div>`:''}</div>`};
 
 /* ---------- §3 first launch: Before you begin (per script) ---------- */
