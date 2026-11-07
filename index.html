@@ -4042,7 +4042,7 @@ R.kanamark=()=>{const D=kanaData(),grp=(sc,g)=>{const all=g.items.every(it=>KM.s
     return `<div class="kml-gh"><span>${sc==='h'?'HIRAGANA':'KATAKANA'} · ${g.name.toUpperCase()}</span><span class="kml-all tap${all?' on':''}" data-act="krow:${g.key}" role="button" aria-pressed="${all}">ALL ${all?'✓':''}</span></div>
 <div class="nm-card kml-card">${g.items.map(it=>`<div class="kml-r" data-id="${it.id}"><span class="kml-g" lang="ja">${it.k}</span><div class="kml-m"><b>${it.ro}</b></div>${kchk(KM.sel.has(it.id),'ktick:'+it.id,'Know '+it.k)}</div>`).join('')}</div>`};
   const body=KM.sc.map(sc=>`<div class="kml-sc">${sc==='h'?'Hiragana':'Katakana'}</div>${D.table[sc].map(g=>grp(sc,g)).join('')}`).join('');
-  return kPage('kml',nuHdr('Mark what you know','First login · tick what you already know'),`<div class="kml">${body}</div>`,`<div class="nu-btn go tap kml-go" data-act="kdone" role="button">Continue · ${KM.sel.size} ticked</div>`)};
+  return kPage('kml',nuHdr('Mark what you know','First login · tick what you already know'),`<div class="kml">${body}</div>`,`<div class="nu-btn go tap kml-go" data-act="kdone" role="button">Continue · ${KM.sel.size} selected</div>`)};
 function kanaFinish(){const k=kst();k.h=KS.m.h;k.k=KS.m.k;k.setup=1;srsSave();S.modal=null;home()}
 
 /* ---------- §8 Home: the kana banner (only addition) ---------- */
@@ -4106,7 +4106,7 @@ act=function(a){const [k,v]=a.split(/:(.*)/s);if(S.art&&k!=='art')return _actK(a
     KM.sc=L;KM.sel=new Set(L.filter(sc=>KS.m[sc]==='know').flatMap(sc=>kanaData().chars[sc].map(it=>it.id)));go('kanamark');return}
   case 'ktick':{KM.sel.has(v)?KM.sel.delete(v):KM.sel.add(v);render();return}
   case 'krow':{const g=kanaData().table[v.split('-')[0]].find(x=>x.key===v);if(!g)return;const all=g.items.every(it=>KM.sel.has(it.id));g.items.forEach(it=>all?KM.sel.delete(it.id):KM.sel.add(it.id));render();return}
-  case 'kdone':{const n=KM.sel.size;modal(n?`Mark ${n} item${n===1?'':'s'} as known?`:'Nothing ticked',
+  case 'kdone':{const n=KM.sel.size;modal(n?`Mark ${n} item${n===1?'':'s'} as known?`:'Nothing selected',
       `<div class="kdlg"><span class="gc-round sm kdlg-ic">${KBRAIN}</span><p>${n?'Known items <b>will not show up in Study or Review</b> — the app treats them as already learned. Anything you left unticked enters your Study queue on the normal schedule.':'Every kana in this list will come up in Study on the normal schedule.'} You can change this later on the Mark Known Items page.</p></div>`,
       [['out','Cancel','closeModal'],['wh','Confirm','kconfirm']]);return}
   case 'kconfirm':{kmark([...KM.sel]);kanaFinish();return}
