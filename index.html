@@ -2726,7 +2726,9 @@ const GCI={flame:'<path d="M12 2.5c.8 3 4.8 5.2 4.8 10a4.8 4.8 0 0 1-9.6 0c0-2.4
   gear:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.6"/><path d="M12 2.4v2.8M12 18.8v2.8M2.4 12h2.8M18.8 12h2.8M5.2 5.2l2 2M16.8 16.8l2 2M5.2 18.8l2-2M16.8 7.2l2-2"/>',
   eye:'<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
   eyex:'<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/>',
-  reload:'<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/>'};
+  reload:'<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/>',
+/* v56h (Derek 2026-11-07): Home button icon - a house in the same 24px round-cap stroke style as the other round buttons */
+home:'<path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/>'};
 R.homeCards=()=>{const due=dueList().length,left=newLeft(),avail=newItems().length,g=gradeStats('N5'),nr=Math.min(left,avail);
   const [deep,card,card2,acc]=gcPal(),pl=(n,a,b)=>n===1?a:b;
   const ssub=!avail?'All your items are learned':nr?`${nr} new ${pl(nr,'item','items')}`:'Daily limit reached';
@@ -3521,6 +3523,7 @@ function act(a){const [k,v]=a.split(/:(.*)/s);const d=S.duel;if(S.art&&k!=='art'
   case 'tnext':if(S.duel&&S.duel.two&&S.duel.phase==='fb'){clearTimeout(fbTimer);nextQ()}break;
   case 'tknew':tinKnew('act');break;
   case 'askfirst':S.set.askFirst=v==='m'?'meaning':'reading';try{localStorage.setItem('kd-askfirst',S.set.askFirst)}catch(e){}render();break;
+  case 'gohome':home();break;/* v56h: the header Home button */
   case 'flee':S.duel=null;S.chalIn=0;clearInterval(tickH);home();break;
   case 'accept':S.trans=false;S.chalIn=0;S.screen='play';S.stack=[];render();startQ();break;
   case 'quit':{const d=S.duel;if(!d)break;if(d.phase==='fb')recordQ(d.res[d.i]);finish(false);break}
@@ -3762,7 +3765,10 @@ act=function(a){const [k,v]=a.split(/:(.*)/s);
 const NU_BACK='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
 const NU_CHEV='<svg class="nu-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
 const NU_LOCK='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
-const nuHdr=(t,sub,right='')=>`<div class="nh"><div class="nh-b tap" data-act="back" role="button" aria-label="Back">${NU_BACK}</div><div class="nh-tt"><h1>${t}</h1><div class="nh-s">${sub}</div></div><span style="flex:1"></span>${right}${ART_SCR[S.screen]?`<div class="gc-round alt sm eyebtn tap" data-act="art" role="button" aria-pressed="${S.art?'true':'false'}" aria-label="${S.art?'Show controls':'View art'}">${gsv(GCI[S.art?'eyex':'eye'],22)}</div>`:''}</div>`;
+/* v56h (Derek 2026-11-07): the eye (hide controls / view art) is on Home only; every other screen header gets a Home button instead,
+   except Study and Review (the session must be ended first) and the first-login kana setup (Home would return to it). */
+const NU_NOHOME={home:1,title:1,study:1,play:1,kana:1,kanamark:1};
+const nuHdr=(t,sub,right='')=>`<div class="nh"><div class="nh-b tap" data-act="back" role="button" aria-label="Back">${NU_BACK}</div><div class="nh-tt"><h1>${t}</h1><div class="nh-s">${sub}</div></div><span style="flex:1"></span>${right}${NU_NOHOME[S.screen]?'':`<div class="gc-round alt sm homebtn tap" data-act="gohome" role="button" aria-label="Home">${gsv(GCI.home,22)}</div>`}</div>`;
 const nuPage=(t,sub,right,body)=>{const p=gcPal();return `${menuBg()}<div class="layer nu np" style="${nuVars(p)}"><div class="np-scrim"></div>${STATUS}${nuHdr(t,sub,right)}${scroll(body,'padding:4px 16px 0')}</div>`};
 const nuTog=(on,key,lab)=>`<div class="nu-tg${on?' on':''} tap" data-act="stog:${key}" role="switch" aria-checked="${on}" aria-label="${lab}"><i></i></div>`;
 /* entry time of the current screen (bars, count-ups and staggers run once, on entry) */
@@ -3909,7 +3915,7 @@ function nuSkin(){const ph=document.getElementById('phone'),sk=!!NUSKIN[S.screen
   ph.classList.toggle('nuskin',sk);ph.classList.add('nu-on');const p=nuScrPal();['--gc-deep','--gc-card','--gc-card2','--gc-accent'].forEach((v,i)=>ph.style.setProperty(v,p[i]));
   if(md)md.classList.add('numod');
   const h=sk&&document.querySelector('#scr .hdr');if(h){const t=(h.querySelector('h1')||{}).textContent||'';
-    const right=[...h.children].filter(x=>!x.matches('.back,.ttl,.sp,.eyebtn,.reloadbtn')).map(x=>{x.className=x.className.replace(/\bkd-btn\S*/g,'').trim()+' nh-pill tap';return x.outerHTML}).join('');
+    const right=[...h.children].filter(x=>!x.matches('.back,.ttl,.sp,.eyebtn,.homebtn,.reloadbtn')).map(x=>{x.className=x.className.replace(/\bkd-btn\S*/g,'').trim()+' nh-pill tap';return x.outerHTML}).join('');
     const rl=h.querySelector('.reloadbtn')?`<div class="gc-round alt sm reloadbtn tap" data-act="mbg" role="button" aria-label="Change background">${gsv(GCI.reload,22)}</div>`:'';
     const w=document.createElement('div');w.innerHTML=nuHdr(t,NUSUB[S.screen]||'',right+rl);h.replaceWith(w.firstElementChild)}}
 function nuSkinOff(){const ph=document.getElementById('phone');ph.classList.remove('nuskin','nu-on');['--gc-deep','--gc-card','--gc-card2','--gc-accent'].forEach(v=>ph.style.removeProperty(v))}
@@ -4099,7 +4105,7 @@ R.known=()=>{const T=knTiers();
     return `<div class="nsgr kn-t${o?' open':''}" data-grade="${x.g}"><div class="nsgh tap" data-act="kntier:${x.g}" role="button" aria-expanded="${o}"><div><div class="nsgh-t">${x.nm}</div><div class="nsgh-s">${x.sub} · ${n} items</div></div>${NU_CHEV}</div>
 <div class="ns-bw"><div class="ns-bd">${o?`<div class="kn-list">${x.groups.map(g=>`<div class="kml-gh"><span>${g.name.toUpperCase()}</span><span class="kml-all tap" data-act="kngrp:${g.key}" role="button">ALL ✓</span></div><div class="nm-card kml-card">${g.items.map(row).join('')}</div>`).join('')}</div>`:''}</div></div></div>`};
   const [a,u]=knCounts();
-  return kPage('kn',nuHdr('Mark known items','Tick anything you already know'),`<p class="kn-note">Only the tiers you can open appear here. Known items skip Study and Review and count as complete; deselect a Known item to send it back to New.</p>${T.map(tier).join('')}`,
+  return kPage('kn',nuHdr('Mark known items','Select anything you already know'),`<p class="kn-note">Only the tiers you can open appear here. Known items skip Study and Review and count as complete; deselect a Known item to send it back to New.</p>${T.map(tier).join('')}`,
     `<div class="nu-btn go tap kn-go${a||u?'':' dis'}" data-act="knapply" role="button" aria-disabled="${!(a||u)}">${knLabel()}</div>`)};
 function knSync(){const b=document.querySelector('#scr .kn-go');if(!b)return;const [a,u]=knCounts();b.textContent=knLabel();b.classList.toggle('dis',!(a||u));b.setAttribute('aria-disabled',!(a||u))}
 const knGroup=key=>{for(const t of knTiers())for(const g of t.groups)if(g.key===key)return g;return null};
