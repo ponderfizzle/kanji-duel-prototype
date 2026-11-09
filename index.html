@@ -1772,7 +1772,7 @@ const FREE_SETS=[1,2,3,4]; /* Beginner sets 1-4 are free; 5+ cost $0.99 */
    Where a bank item is the same as a legacy one (same kanji; same word with the same reading), its card text and accepted answers are
    the curated ones (data/n5_clean); every other item takes them from the bank (EDRDG). */
 const FULLJ=(()=>{try{const el=document.getElementById('kd-full');return el?JSON.parse(el.textContent):null}catch(e){console.error(e);return null}})();
-const ITEMS={}; const SETITEMS={}; const LEGACY={};
+const ITEMS={}; const SETITEMS={}; const LEGACY={}; const LEGMAP={};
 for(const n of Object.keys(BANK.K)){
   for(const [k,kun,on,m] of BANK.K[n]){const it={id:'k:'+k,t:'k',set:0,leg:+n,k,kun,on,on0:NO_ON.has(k)?'':on[0],m};ITEMS[it.id]=it;LEGACY[it.id]=it}
   for(const [w,r,m] of BANK.V[n]){const it={id:'v:'+w,t:'v',set:0,leg:+n,k:w,r,m};ITEMS[it.id]=it;LEGACY[it.id]=it}}
@@ -1786,11 +1786,11 @@ const kunCard=raw=>{const L=(raw||[]).filter(r=>!/^-|-$/.test(r)),r=(L[0]||(raw|
 if(FULLJ&&FULLJ.packs){const KB={},VB={},legK={},legV={};FULLJ.kanji.forEach(k=>KB[k.id]=k);FULLJ.vocab.forEach(w=>VB[w.id]=w);
   for(const id in LEGACY){const it=LEGACY[id];if(it.t==='k')legK[it.k]=it;else legV[it.k]=it}
   FULLJ.packs.forEach(p=>{const n=p.seq,L=[];
-    for(const id of p.kanji){const k=KB[id],lg=legK[k.char];
+    for(const id of p.kanji){const k=KB[id],lg=legK[k.char];if(lg&&!LEGMAP[lg.id])LEGMAP[lg.id]=id;
       L.push(lg?{id,t:'k',set:n,k:k.char,kun:lg.kun,on:lg.on,on0:lg.on0,m:lg.m}
         :{id,t:'k',set:n,k:k.char,kun:kunCard(k.kunRaw),on:k.on,on0:k.on[0]||'',m:k.gloss,ml:mlClean(k.meanings),
           acc:[...new Set([...k.on,...k.kunRaw.map(r=>r.replace(/[-.]/g,'')),...k.kunRaw.map(r=>r.replace(/-/g,'').split('.')[0])].filter(Boolean))]})}
-    for(const id of p.words){const w=VB[id],lg=legV[w.word];
+    for(const id of p.words){const w=VB[id],lg=legV[w.word];if(lg&&lg.r===w.reading&&!LEGMAP[lg.id])LEGMAP[lg.id]=id;
       L.push(lg&&lg.r===w.reading?{id,t:'v',set:n,k:w.word,r:w.reading,m:lg.m}:{id,t:'v',set:n,k:w.word,r:w.reading,m:w.gloss,ml:mlClean(w.accept),acc:[w.reading]})}
     L.forEach(it=>ITEMS[it.id]=it);SETITEMS[n]=L;
     const P={n,id:p.id,section:p.section,g:SEC_CODE[p.section]||'VO',title:p.title,grade:p.grade||'',nk:p.kanji.length,nw:p.words.length,first:L.length?L[0].k:''};
@@ -1810,7 +1810,11 @@ const TLIM={k:60,v:90}; /* v56: kana (n) 30 s, set in kana_app.js */ /* seconds 
 const SRS_KEY='kd-srs-v1';
 const blankP=()=>({st:0,due:0,last:0,learned:0,lapses:0,r:{ok:0,n:0},m:{ok:0,n:0}});
 const freshSR=()=>({v:1,P:{},lessons:[],mistakes:[],daily:{day:'',n:0},clock:0,wins:0});
-function srsLoad(){try{const s=JSON.parse(localStorage.getItem(SRS_KEY)||'null');if(s&&s.v===1)return Object.assign(freshSR(),s)}catch(e){}return freshSR()}
+/* v59b (Derek 2026-11-09): old Beginner progress is copied once onto the matching pack item (same kanji; same word and reading), only where that
+   item has no record yet. The old k:/v: records stay exactly as they were; nothing is reset or deleted. SR.mig59 marks it done. */
+function srsMig59(s){if(s.mig59)return s;let n=0;for(const old in LEGMAP){const nw=LEGMAP[old];if(s.P[old]&&!s.P[nw]){s.P[nw]=JSON.parse(JSON.stringify(s.P[old]));n++}}
+  s.mig59=1;try{localStorage.setItem(SRS_KEY,JSON.stringify(s))}catch(e){}return s}
+function srsLoad(){try{const s=JSON.parse(localStorage.getItem(SRS_KEY)||'null');if(s&&s.v===1)return srsMig59(Object.assign(freshSR(),s))}catch(e){}return freshSR()}
 let SR=srsLoad();
 function srsSave(){try{localStorage.setItem(SRS_KEY,JSON.stringify(SR))}catch(e){}}
 const clockNow=()=>Date.now()+(SR.clock||0);
@@ -3725,7 +3729,7 @@ addEventListener('resize',fit);window.visualViewport&&visualViewport.addEventLis
 render();
 (document.fonts&&document.fonts.ready||Promise.resolve()).then(()=>render());
 window.__mNorm=mNorm;window.__checkMeaning=checkMeaning;window.__meaningMatch=meaningMatch;window.__meaningList=meaningList;window.__mDist=mDist;window.__answerPart=answerPart;window.__wrongField=wrongField;window.__newDuel=(ids,mode)=>{newDuel(null,mode||'review',ids.map(id=>ITEMS[id]));go('challenge')};window.__QUOTES=QUOTES;window.__isMastered=isMastered;window.__isWeak=isWeak;window.__setStats=setStats;window.__overall=overall;window.__recordQ=recordQ;window.__toKana=toKana;window.__kanaOf=kanaOf;window.__checkTyped=checkTyped;window.__acceptList=acceptList;window.__normAns=normAns;window.__ACCEPT=ACCEPT;window.__answerTyped=answerTyped;
-window.__PACKS=PACKS;window.__bankCounts=bankCounts;window.__SET18=n=>{const L=SETITEMS[n]||[];return [...L.filter(i=>i.t==='k').slice(0,10),...L.filter(i=>i.t==='v').slice(0,8)]}; /* v59 tests: a pack's first 10 kanji + 8 words (the size of an old set) */
+window.__LEGMAP=LEGMAP;window.__PACKS=PACKS;window.__bankCounts=bankCounts;window.__SET18=n=>{const L=SETITEMS[n]||[];return [...L.filter(i=>i.t==='k').slice(0,10),...L.filter(i=>i.t==='v').slice(0,8)]}; /* v59 tests: a pack's first 10 kanji + 8 words (the size of an old set) */
 window.__LESSON=LESSON;window.__S=S;window.__act=act;window.__ITEMS=ITEMS;window.__SETITEMS=SETITEMS;window.__makeQ=makeQ;window.__OPP=OPP;window.__BG=BG;window.__OPP_BG=OPP_BG;window.__bgPool=bgPool;window.__pickScene=pickScene;window.__BG_ONLY=BG_ONLY;window.__AICONS=AICONS;
 Object.defineProperty(window,'__SR',{get:()=>SR,configurable:true});
 window.__GCPAL=GCPAL;window.__gcKey=gcKey;window.__hl=()=>HL.v;window.__numplate=numplate;window.__MW=MW;window.__MM=MM;window.__PK=PK;window.__EXO=EXO;window.__MENU=MENU;window.__MENU_POOL=MENU_POOL;window.__menuCur=menuCur;window.__PSCENE=PSCENE;window.__BG_LD=BG_LD;window.__lastSeen=lastSeen;window.__masteredT=masteredT;window.__remasterPool=remasterPool;window.__recentLessons=recentLessons;window.__recentMistakes=recentMistakes;window.__pkVal=pkVal;window.__pkCommit=pkCommit;window.__weakPick=weakPick;window.__gradeStats=gradeStats;window.__srs={grade:srsGrade,learn:srsLearn,count:srsCount,due:dueList,nextDue,newItems,now:clockNow,jump:ms=>{SR.clock=(SR.clock||0)+ms;srsSave()},ease:easeMult,dayKey,newLeft,newReady,STUDY_BATCH,NPD_OPTS,newToday,save:srsSave,load:()=>{SR=srsLoad();return SR},reset:()=>{SR=freshSR();srsSave()},demo:loadDemo,GAP,TLIM,MASTERED,verdict,stage,isWeak,rankBadge,finish};
@@ -3944,7 +3948,7 @@ function nuMastery(){nuEnter('mastery');const g=gradeStats('all'),bc=bankCounts(
   /* v50 (user 2026-11-05): Set progress grouped by grade; each grade opens and closes (Beginner open on entry) */
   const AS=nuAllSets(),rows=packSecs().map(s=>[s.g,s.name]).map(([g,nm])=>{const L=AS.filter(x=>x.g===g&&x.own),n=L.length,o=n&&!!MX.g[g],avg=n?Math.round(L.reduce((a,x)=>a+x.pct,0)/n):0;
     const body=L.map(x=>x.real?rowN5(x.n):`<div class="nm-row" data-set="${x.key}"><div class="nm-rh"><span class="nm-rn">${x.title}</span>${nuBar(x.pct,'acc')}<span class="nm-rp">${x.pct>=100?'✓':x.pct+'%'}</span></div></div>`).join('');
-    return `<div class="nm-grp${o?' open':''}" data-grade="${g}"><div class="nm-gh${n?' tap':''}" ${n?`data-act="mgrp:${g}" role="button" aria-expanded="${!!o}"`:''}><div class="nm-gt"><b>${nm}</b><span>${n?`${n} set${n===1?'':'s'} · ${avg}% average`:'No sets yet'}</span></div>${n?nuBar(avg,'acc')+NU_CHEV:''}</div><div class="ns-bw"><div class="ns-bd">${body}</div></div></div>`}).join('');
+    return `<div class="nm-grp${o?' open':''}" data-grade="${g}"><div class="nm-gh${n?' tap':''}" ${n?`data-act="mgrp:${g}" role="button" aria-expanded="${!!o}"`:''}><div class="nm-gt"><b>${nm}</b><span>${n?`${n} set${n===1?'':'s'} · ${avg}% average`:'None unlocked yet'}</span></div>${n?nuBar(avg,'acc')+NU_CHEV:''}</div><div class="ns-bw"><div class="ns-bd">${body}</div></div></div>`}).join('');
   const DN=['Su','Mo','Tu','We','Th','Fr','Sa'],today=new Date(clockNow()-4*HR).getDay();
   const act7=`<div class="nm-card"><div class="nm-h">Last 7 days</div><div class="nm-chart">${days.map((v,i)=>`<div class="nm-c"><i class="${i===6?'t':''}" style="--h:${v/mx};--i:${i}"></i><span>${DN[(today-6+i+7)%7]}</span></div>`).join('')}</div><div class="nm-cap">Reviews per day — today is the bright bar.${wk?'':' Reviews you finish from now on show up here.'}</div></div>`;
   const nm=masteredT().length,wl=weakList().length,ex=k=>{const L=k==='l'?recentLessons():recentMistakes(),pool=L.length,v=pool?pkVal(k,pool):0;
