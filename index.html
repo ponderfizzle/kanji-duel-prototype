@@ -3932,13 +3932,16 @@ function nuSettings(){const m=mode(),PL=PALETTES.filter(p=>p.mode===m),pc=PL.fin
     +nuRow('24-hour time',S.set.h24?'e.g. 19:30':'e.g. 7:30 PM',nuTog(S.set.h24,'h24','24-hour time'));
   const arr='<span class="ns-arr">›</span>';
   const acc=(monB()?nuRow('Premium · Remove ads',MON.premium?'Active · no ads':'$24.99 one-time',arr,'prem'):'')/* TEMP-MONETIZATION-SWITCH */
-    +nuRow('Restore purchases','Google Play',arr,'restore')+nuRow('Reset progress','Clears stages, history &amp; streak',arr,'reset')+nuRow('Dictionary sources','JMdict · KANJIDIC2 · EDRDG licence',arr,'go:sources')+nuRow('About &amp; sources','Version 1.0 · Credits · Licences',arr,'about');
+    +nuRow('Restore purchases','Google Play',arr,'restore')+nuRow('Reset progress','Clears stages, history &amp; streak',arr,'reset');
+  /* v59f (Derek 2026-11-09): licensing and app info in their own section, apart from the account rows */
+  const lic=nuRow('Dictionary sources','JMdict · KANJIDIC2 · EDRDG licence',arr,'go:sources')+nuRow('About &amp; sources','Version 1.0 · Credits · Licences',arr,'about');
   const body=nuSec('app','Appearance',`${thName} · ${pc?pc.name:'Default'} palette · ${HL.v==='cards'?'New':'Classic'} interface`,app)
     +nuSec('btn','Buttons',`${bst.name}${neon?' · fixed colours':''}`,btn)
     +nuSec('study','Study',`${npd} new a day · ${S.set.askFirst==='meaning'?'meaning':'reading'} first · ${S.set.autoNext?'auto-continue':'wait for Next'}`,study)
     +nuSec('snd','Sound',`Music ${S.set.music?'on':'off'} · effects ${S.set.sfx?'on':'off'}`,snd)
     +nuSec('rem','Reminders',rm?`Daily at ${tm}`:'Off',rmd)
-    +nuSec('acct','Account &amp; data','Purchases · reset · sources · about',acc);
+    +nuSec('acct','Account &amp; data','Purchases · reset progress',acc)
+    +nuSec('lic','About &amp; licences','Dictionary sources · credits · licences',lic);
   return nuPage('Settings','Make it yours','',body)}
 /* new items per day slider: live value while dragging, saved on release */
 document.addEventListener('input',e=>{if(e.target.id!=='npdr')return;const v=+e.target.value;e.target.style.setProperty('--f',Math.round((v-5)/20*100)+'%');const b=document.getElementById('npdv');if(b)b.textContent=v});
