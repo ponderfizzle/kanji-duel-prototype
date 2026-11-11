@@ -620,6 +620,10 @@ body.kbopen #phone #tin.gcu .tin-main{flex-direction:row}
 .nsgc>.on{background:var(--gc-accent);color:var(--gc-deep)}
 .nsf{margin-top:10px;padding:0 16px;border-radius:18px;background:var(--gc-card)}
 .nsf .ns-row{border-top:0}
+/* v60c Sets Filter bar: two drop-down buttons in one row, their menus full width below */
+.nsf-r{gap:8px}.nsf-r .ns-l{flex:none}.nsf-r .ns-v{flex:0 1 auto;max-width:none;min-width:0}.nsf-r .ns-v:first-of-type{margin-left:auto}
+.ns-v.open .nu-chev{transform:rotate(180deg)}
+.nsf-c{font-style:normal;opacity:.65;margin-left:4px}
 .nsgr{margin-top:14px}
 .nsgh{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-radius:18px;background:color-mix(in srgb,var(--gc-deep) 70%,transparent)}
 .nsgh-t{font-size:18px;font-weight:800}
@@ -3960,6 +3964,8 @@ const SM={open:'app',dd:null};
 function nuDD(id,label,cur,opts){const o=SM.dd===id;
   return `<div class="ns-dd${o?' open':''}" data-dd="${id}"><div class="ns-row"><span class="ns-l">${label}</span><div class="ns-v tap" data-act="sdd:${id}" role="button" aria-haspopup="listbox" aria-expanded="${o}">${cur}${NU_CHEV}</div></div>
 <div class="ns-mw"><div class="ns-menu" role="listbox">${opts.map(([act,t,on])=>`<div class="ns-o tap${on?' on':''}" data-act="ddpick:${act}" role="option" aria-selected="${on}"><span>${t}</span>${on?'<b>✓</b>':''}</div>`).join('')}</div></div></div>`}
+/* v60c: drop-down buttons that sit outside their menu (the Sets Filter bar) follow SM.dd */
+const nuDDB=()=>document.querySelectorAll('#scr [data-ddb]').forEach(b=>{const on=b.dataset.ddb===SM.dd;b.classList.toggle('open',on);b.setAttribute('aria-expanded',on)});
 const nuRow=(label,sub,right,act='')=>`<div class="ns-row${act?' tap':''}"${act?` data-act="${act}" role="button"`:''}><div class="ns-l">${label}${sub?`<div class="ns-sub">${sub}</div>`:''}</div>${right}</div>`;
 function nuSec(id,title,sum,body){const o=SM.open===id;
   return `<div class="ns-sec${o?' open':''}" data-sec="${id}"><div class="ns-hd tap" data-act="sacc:${id}" role="button" aria-expanded="${o}"><div><div class="ns-t">${title}</div><div class="ns-sum">${sum}</div></div>${NU_CHEV}</div><div class="ns-bw"><div class="ns-bd">${body}</div></div></div>`}
@@ -4039,8 +4045,13 @@ function nuAllSets(){return PACKS.map(p=>{const own=S.owned.has(p.n);return {g:p
 const SF={f:'all',g:'all',sort:'grade',open:{N5:true}};
 const nuSortSets=L=>SF.sort==='prog'?L.slice().sort((a,b)=>(b.own-a.own)||(b.pct-a.pct)||(a.n-b.n)):SF.sort==='name'?L.slice().sort((a,b)=>a.title.localeCompare(b.title)):L;
 function nuSets(){nuEnter('sets');const A=nuAllSets(),F=A.filter(x=>(SF.g==='all'||x.g===SF.g)&&(SF.f==='all'||(SF.f==='prog'?x.own&&x.pct<100:!x.own)));
-  const seg=`<div class="ns-seg" role="tablist">${[['all','All'],['prog','In progress'],['lock','Locked']].map(([k,t])=>`<div class="tap${SF.f===k?' on':''}" data-act="sfilt:${k}" role="tab" aria-selected="${SF.f===k}">${t}</div>`).join('')}</div>`;
-  const gch=`<div class="nsgc" role="tablist" aria-label="Grade">${[['all','All grades',A.length],...packSecs().map(s=>[s.g,s.name,s.L.length])].map(([g,t,c])=>`<div class="tap${SF.g===g?' on':''}" data-act="sgrade:${g}" role="tab" aria-selected="${SF.g===g}">${t} <span>${c}</span></div>`).join('')}</div>`;
+  /* v60c experiment (Derek 2026-11-10): the status pills and grade chips become one Filter bar like Sort, with two drop-downs
+     (the menus open full width under the bar; the picks still run sfilt: / sgrade:) */
+  const FN={all:'All sets',prog:'In progress',lock:'Locked'},GL=[['all','All grades',A.length],...packSecs().map(s=>[s.g,s.name,s.L.length])],gcur=(GL.find(x=>x[0]===SF.g)||GL[0])[1];
+  const fb=(id,cur,lab)=>`<div class="ns-v tap${SM.dd===id?' open':''}" data-act="sdd:${id}" data-ddb="${id}" role="button" aria-haspopup="listbox" aria-expanded="${SM.dd===id}" aria-label="${lab}: ${cur}">${cur}${NU_CHEV}</div>`;
+  const fm=(id,opts)=>`<div class="ns-dd${SM.dd===id?' open':''}" data-dd="${id}"><div class="ns-mw"><div class="ns-menu" role="listbox">${opts.map(([act,t,on,c])=>`<div class="ns-o tap${on?' on':''}" data-act="ddpick:${act}" role="option" aria-selected="${on}"><span>${t}${c!=null?` <i class="nsf-c">${c}</i>`:''}</span>${on?'<b>✓</b>':''}</div>`).join('')}</div></div></div>`;
+  const filt=`<div class="ns-row nsf-r"><span class="ns-l">Filter</span>${fb('sfil',FN[SF.f],'Show')}${fb('sgr',gcur,'Grade')}</div>`
+    +fm('sfil',Object.entries(FN).map(([k,t])=>[`sfilt:${k}`,t,SF.f===k]))+fm('sgr',GL.map(([g,t,c])=>[`sgrade:${g}`,t,SF.g===g,c]));
   const SN={grade:'Set order',prog:'Progress',name:'Name A–Z'};
   const sort=nuDD('ssort','Sort',SN[SF.sort],Object.entries(SN).map(([k,t])=>[`ssort:${k}`,t,SF.sort===k]));
   let i=0;const card=x=>`<div class="nsc tap${x.own?'':' lock'}" data-act="details:${x.n}" data-set="${x.n}" data-pack="${x.key}" data-g="${x.g}" style="--i:${i++}" role="button" aria-label="${x.sec} ${x.title}${x.grade?', '+x.grade:''}: ${x.nk?x.nk+' kanji, ':''}${x.nw} words${x.own?', '+x.pct+'%':', locked'}"><div class="nsc-k${x.nk?'':' w'}">${ja(x.k)}</div><div class="nsc-n">${x.title}</div><div class="nsc-c">${x.grade?x.grade+'<br>':''}${x.nk?x.nk+' kanji · ':''}${x.nw} words</div>
@@ -4051,7 +4062,7 @@ ${x.own?`${nuBar(x.pct,'acc')}<div class="nsc-p">${x.pct}%</div>`:`<div class="n
 <div class="ns-bw"><div class="ns-bd"><div class="nsg">${L.map(card).join('')||'<div class="ns-sub" style="grid-column:1/-1;padding:10px 4px">No sets here.</div>'}</div></div></div></div>`}).join('');
   const right=`<div class="nh-pill tap" data-act="${monB()?'prem':'restore'}" role="button">${monB()?'Premium':'Restore'}</div>`/* TEMP-MONETIZATION-SWITCH */;
   const note=monB()?'All sets are free. Ads keep them free; Premium removes the ads. Tap any set to preview its kanji &amp; vocab.'/* TEMP-MONETIZATION-SWITCH */:`Beginner Sets 1–4 are free. Every other set is $0.99${gateOpen()?'':', once you learn hiragana and katakana'}. Tap any set to preview its kanji &amp; vocab.`;
-  return nuPage('Sets','Browse &amp; unlock kanji sets',right,`${seg}${gch}<div class="nsf">${sort}</div>${kanaSetsHtml()}${groups||'<div class="ns-sub" style="padding:18px 4px">No sets here.</div>'}<div class="nsn">${note}</div>`)}
+  return nuPage('Sets','Browse &amp; unlock kanji sets',right,`<div class="nsf nsf-f">${filt}</div><div class="nsf">${sort}</div>${kanaSetsHtml()}${groups||'<div class="ns-sub" style="padding:18px 4px">No sets here.</div>'}<div class="nsn">${note}</div>`)}
 
 /* ---------- wiring ---------- */
 R.settings=()=>NU()?nuSettings():_R0.settings();
@@ -4063,8 +4074,8 @@ act=function(a){const [k,v]=a.split(/:(.*)/s);if(S.art&&k!=='art')return _act1(a
   switch(k){
   case 'sacc':{SM.open=SM.open===v?null:v;SM.dd=null;document.querySelectorAll('#scr .ns-sec').forEach(s=>{const on=s.dataset.sec===SM.open;s.classList.toggle('open',on);s.querySelector('.ns-hd').setAttribute('aria-expanded',on)});
     document.querySelectorAll('#scr .ns-dd.open').forEach(x=>x.classList.remove('open'));return}
-  case 'sdd':{SM.dd=SM.dd===v?null:v;document.querySelectorAll('#scr .ns-dd').forEach(x=>{const on=x.dataset.dd===SM.dd;x.classList.toggle('open',on);const b=x.querySelector('.ns-v');if(b)b.setAttribute('aria-expanded',on)});return}
-  case 'ddpick':{const id=SM.dd;act(v);requestAnimationFrame(()=>requestAnimationFrame(()=>{if(SM.dd!==id)return;SM.dd=null;const x=document.querySelector(`#scr .ns-dd[data-dd="${id}"]`);if(x)x.classList.remove('open')}));return}
+  case 'sdd':{SM.dd=SM.dd===v?null:v;document.querySelectorAll('#scr .ns-dd').forEach(x=>{const on=x.dataset.dd===SM.dd;x.classList.toggle('open',on);const b=x.querySelector('.ns-v');if(b)b.setAttribute('aria-expanded',on)});nuDDB();return}
+  case 'ddpick':{const id=SM.dd;act(v);requestAnimationFrame(()=>requestAnimationFrame(()=>{if(SM.dd!==id)return;SM.dd=null;const x=document.querySelector(`#scr .ns-dd[data-dd="${id}"]`);if(x)x.classList.remove('open');nuDDB()}));return}
   case 'npal':PAL[mode()]=v;render();return;
   case 'stog':{const el=document.querySelector(`#scr [data-act="stog:${v}"]`);if(el){el.classList.toggle('on');el.setAttribute('aria-checked',el.classList.contains('on'))}clearTimeout(SM.th);SM.th=setTimeout(()=>_act1('tog:'+v),200);return}
   case 'mexp':{MX.open[v]=!MX.open[v];const r=document.querySelector(`#scr .nm-row[data-set="${v}"]`);if(r){r.classList.toggle('open',!!MX.open[v]);r.querySelector('.nm-rh').setAttribute('aria-expanded',!!MX.open[v])}return}
